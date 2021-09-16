@@ -17,11 +17,26 @@ function activate(context) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('ece408-remote-control.helloWorld', function () {
+	let disposable = vscode.commands.registerCommand('ece408-remote-control.push', function () {
 		// The code you place here will be executed every time your command is executed
 
+		// Main code area, use selenium for automation
+		var webdriver = require('selenium-webdriver'),
+			By = webdriver.By,
+			until = webdriver.until;
+
+		var driver = new webdriver.Builder()
+			.forBrowser('chrome')
+			.build();
+
+		driver.get('https://www.baidu.com');
+		driver.findElement(By.id('kw')).sendKeys('webdriver');
+		driver.findElement(By.id('su')).click();
+		driver.wait(until.titleIs('webdriver_百度搜索'), 1000);
+		driver.quit();
+
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from ECE408 Remote Control!');
+		vscode.window.showInformationMessage("You've now successfully pushed your code to WebGPU!");
 	});
 
 	context.subscriptions.push(disposable);

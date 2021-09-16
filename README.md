@@ -1,5 +1,7 @@
 # ece408-remote-control README
 
+![avatar](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-09-16-062901.png)
+
 ## Features
 
 Hello, our extension uses your code created locally onto VS Code and use them for posting on the webgpu website and automatically use it for running the tests online. Note that all 
