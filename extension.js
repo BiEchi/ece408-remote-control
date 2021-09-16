@@ -12,11 +12,10 @@ const vscode = require('vscode');
  */
 function activate(context) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
+	// This part of  code will only be executed once when your extension is activated
+
 	console.log('Congratulations, your extension "ece408-remote-control" is now active!');
 
-	// Temporary store the data in the variables here. Later need to be transfered to command line input.
 	const account = "haob2";
 	const passwd = "thanbell16";
 	const num_lab = 0;
@@ -25,18 +24,16 @@ function activate(context) {
 	var webdriver = require('selenium-webdriver'),
 		By = webdriver.By,
 		until = webdriver.until;
-
 	var driver = new webdriver.Builder()
 		.forBrowser('chrome')
 		.build();
 
-	driver.get('https://www.webgpu.net');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('ece408-remote-control.login', function () {
+	// this function is already finished
+	let disposable1 = vscode.commands.registerCommand('ece408-remote-control.login', function () {
 		// The code you place here will be executed every time your command is executed
+
+		// Certify the website
+		driver.get('https://www.webgpu.net');
 
 		// Login process
 		var login_button = driver.wait(until.elementLocated(By.xpath('//*[@id="content"]/div/div/div/div[3]/a[2]/div'), 20));
@@ -65,27 +62,52 @@ function activate(context) {
 		vscode.window.showInformationMessage("Successfully logged in to your WebGPU account and accessing Lab" + num_lab.toString() + ".");
 	});
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
+	// this function is still troublesome
 	let disposable2 = vscode.commands.registerCommand('ece408-remote-control.pull', function () {
-		// Obtain the raw data
-		// var webgpu_codebox = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div/div[5]'), 20));
-		// var raw_content = webgpu_codebox.getText();
-		// vscode.window.showInformationMessage(raw_content);
 
+		// get the raw data
+		var code_promise = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div'), 20));
+		var code = code_promise.getText();
+
+		// examine the code
+		// code.then((code) => {
+		// 	 vscode.window.showInformationMessage("You've now get " + code);
+		// })
+
+		code = "1 #include<wb.h> 2 3 __global__ void cudaPrint(int i) 4 { 5 da 6 7 return; 8 } 9 10 int main(int argc, char **argv) { 11 cudaPrint<<<64, 64>>>(0); 12 cudaDeviceSynchronize(); 13 return 0; 14 }"
 		// process the raw data
-		var clean_content = "Hey!";
+		var reg = /[0-9]+/g;
+		var clean_code = code.replace(reg, "\n");
 
 		// save the raw data and overwrite the lab project
-		var fs = require('fs');
-		fs.writeFileSync("./lab2.cu", "fuck you!");
+		// var fs = require('fs');
+		// fs.writeFileSync("./lab2.cu", "fuck you!");
 
 		vscode.window.showInformationMessage("You've now successfully pulled the code of lab " + num_lab.toString() + ".");
 	});
 
-	context.subscriptions.push(disposable);
-	context.subscriptions.push(disposable2);
+	// this is the core functionality of this project
+	let disposable3 = vscode.commands.registerCommand('ece408-remote-control.push', function () {
+		const fs = require('fs');
+		fs.readFile('./lab2.cu', 'utf8' , (err, data) => {
+			// if (err) {
+			// 	console.error(err);
+			// 	return;
+			// }
+			vscode.window.showInformationMessage("You've now get" + data);
+		})
+
+		vscode.window.showInformationMessage("You've now successfully pushed the code to lab " + num_lab.toString() + 
+		", and the feedback is stored in './output.txt' now. Check it!");
+	});
+
+	let disposable4 = vscode.commands.registerCommand('ece408-remote-control.exit', function () {
+		driver.quit();
+		vscode.window.showInformationMessage("You've successfully exit your account!");
+	});
+
+	for (let item in {disposable1, disposable2, disposable3, disposable4})
+		context.subscriptions.push(item);
 }
 
 // this method is called when your extension is deactivated

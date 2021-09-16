@@ -1,7 +1,5 @@
 # ece408-remote-control README
 
-![avatar](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-09-16-062901.png)
-
 ## Features
 
 Hello, our extension uses your code created locally onto VS Code and use them for posting on the webgpu website and automatically use it for running the tests online. Note that all 
@@ -10,7 +8,8 @@ Hello, our extension uses your code created locally onto VS Code and use them fo
 
 ## Requirements
 
-Please download the plug-in called vscode-cudacpp after you install this plug-in to gain full experience.
+-   Please download the plug-in called `vscode-cudacpp` after you install this plug-in to gain full experience.
+-   Please install `headless-chrome` into your system `PATH`.
 
 ## Extension Settings
 
@@ -18,10 +17,14 @@ This extension contributes the following settings:
 
 * `account`: your account name (Net ID for UIUC) for your WebGPU.
 * `passwd`: your password for your WebGPU.
+* `num_lab`: the number of lab you want to finish.
 
 ## Known Issues
 
-No known issues hitherto.
+-   The Internet connection seems to be not stable when we perform several accesses consecutively.
+-   Need to change selenium to headless mode.
+-   Need to use file IO using node.js.
+-   Need to add new packages in `./node_modules`.
 
 ## Release Notes
 
@@ -34,3 +37,20 @@ No known issues hitherto.
 
 -   completed the login process.
 -   Next step is to write the files using DOM in VS Code.
+
+### 0.0.3
+
+-   Added the GitHub Repository for the extension source file.
+
+### 0.0.4
+
+-   Updated the icon for the extension.
+-   Initialized `push` execution.
+
+### 0.7.0
+
+-   Completed `login` execution.
+-   Completed `exit` execution.
+-   `pull` sledding comes to 50/100 %.
+-   `push` sledding comes to 40/100 %.
+
