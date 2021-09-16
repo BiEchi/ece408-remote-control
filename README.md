@@ -16,8 +16,8 @@ Please download the plug-in called vscode-cudacpp after you install this plug-in
 
 This extension contributes the following settings:
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+* `account`: your account name (Net ID for UIUC) for your WebGPU.
+* `passwd`: your password for your WebGPU.
 
 ## Known Issues
 
@@ -27,4 +27,10 @@ No known issues hitherto.
 
 ### 0.0.1
 
-Initial release of the project.
+-   Initial release of the project.
+-   Created the marketplace position.
+
+### 0.0.2
+
+-   completed the login process.
+-   Next step is to write the files using DOM in VS Code.

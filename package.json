@@ -10,14 +10,19 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:ece408-remote-control.push"
+    "onCommand:ece408-remote-control.login",
+    "onCommand:ece408-remote-control.pull"
   ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "ece408-remote-control.push",
-        "title": "push"
+        "command": "ece408-remote-control.login",
+        "title": "login"
+      },
+      {
+        "command": "ece408-remote-control.pull",
+        "title": "pull"
       }
     ]
   },
