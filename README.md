@@ -2,9 +2,17 @@
 
 ## Features
 
-Hello, our extension uses your code created locally onto VS Code and use them for posting on the webgpu website and automatically use it for running the tests online. Note that all 
+Hello, our extension uses your code created locally onto VS Code and use them for posting on the webgpu website and automatically use it for running the tests online. Note that all.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Steps
+- ctrl+shift+P, then `config`:
+* `account`: your account name (Net ID for UIUC) for your WebGPU.
+* `passwd`: your password for your WebGPU.
+* `num_lab`: the number of lab you want to finish.
+ctrl+shift+P, then `login`.
+ctrl+shift+P, then `pull`.
+ctrl+shift+P, then `push`.
+ctrl+shift+P, then `exit`.
 
 ## Requirements
 
@@ -13,14 +21,6 @@ Hello, our extension uses your code created locally onto VS Code and use them fo
     -   Note that you must download exactly the same version of `chromedriver` as your chrome browser if you want to use the `chromedriver` as your selenium driver.
     -   Note that the chrome browser is likely to be updated automatically when a new version is released. In this case, please update to the newest version of `chromedriver` too.
     -   We strongly recommend you to install the `chromedriver` into the system software directory immediately, i.e. it should appear in `/usr/local/bin/chromedriver`.
-
-## Extension Settings
-
-This extension contributes the following settings:
-
-* `account`: your account name (Net ID for UIUC) for your WebGPU.
-* `passwd`: your password for your WebGPU.
-* `num_lab`: the number of lab you want to finish.
 
 ## Known Issues
 
