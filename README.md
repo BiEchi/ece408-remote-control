@@ -25,8 +25,7 @@ This extension contributes the following settings:
 ## Known Issues
 
 -   Need to change selenium to headless mode.
--   Need to change the argument part for users.
--   Cannot open selenium because of some version errors.
+-   **FATAL: Cannot open selenium because of some version errors.****
 
 ## Contributions
 
@@ -69,4 +68,13 @@ Note that you still need to install the `chromedriver` to start your automata.
 -   Completed `exit` execution.
 -   `pull` sledding comes to 50/100 %.
 -   `push` sledding comes to 40/100 %.
+
+### 0.8.0
+
+-   Completed `pull` execution.
+-   Reconstructed the functions using subroutines and system decomposition.
+
+### 0.9.0
+
+-   Completed `config` execution, which allows users to input their account and password.
 
