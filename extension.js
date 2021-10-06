@@ -1,5 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+const { info } = require('console');
 const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 const { Keyboard } = require('selenium-webdriver/lib/input');
 const { alertIsPresent } = require('selenium-webdriver/lib/until');
@@ -60,15 +61,26 @@ function activate(context) {
 		const fs = require('fs');
 		const code = fs.readFileSync(currentlyOpenTabfilePath, 'utf8');
 		vscode.window.showInformationMessage("The code you wrote is '" + code + "' with type " + typeof(code));
-
-
 		return code;
 	}
 
 	// This part of code will only be executed once when your extension is activated
-	const account = "haob2";
-	const passwd = "thanbell16";
-	const num_lab = 1;
+	var account = "haob2"; var passwd = "thanbell16";
+	var num_lab = 1; // interger
+
+	let config_process = vscode.commands.registerCommand('ece408-remote-control.config', function () {
+		vscode.window.showInputBox(
+			{
+				password:false, 
+				ignoreFocusOut:true, // when the cursor focuses on other places, the input box is still there
+				placeHolder:'Please input your account, password and your intended lab number: ', // notification
+				prompt:'Use the format like "lyon2 mypasswd 2"',
+			}).then(function(info){
+				var info_array = info.split(" ");
+				account = info_array[0]; passwd = info_array[1];
+				num_lab = parseInt(info_array[2]); // convert to integer
+		});
+	});
 	
 	// Initialization
 	var webdriver = require('selenium-webdriver'),
@@ -76,8 +88,9 @@ function activate(context) {
 	until = webdriver.until;
 
 	var driver = new webdriver.Builder()
-		.forBrowser('safari')
+		.forBrowser('chrome')
 		.build();
+
 
 	// this function is already finished
 	let login_process = vscode.commands.registerCommand('ece408-remote-control.login', function () {
@@ -89,6 +102,13 @@ function activate(context) {
 		login(driver);
 		// feedback
 		vscode.window.showInformationMessage("Successfully logged in to your WebGPU account and accessing Lab" + num_lab.toString() + ".");
+
+		vscode.commands.executeCommand('workbench.action.openSettingsJson')
+			.then((s) => {
+				if (s === null) {
+					console.log("Open Settins (JSON) successed");
+				}
+			});
 	});
 
 	// this function is still troublesome
@@ -118,7 +138,7 @@ function activate(context) {
 		vscode.window.showInformationMessage("You've successfully exit your account!");
 	});
 
-	for (let item in {login_process, pull_process, push_process, exit_process})
+	for (let item in {config_process, login_process, pull_process, push_process, exit_process})
 		context.subscriptions.push(item);
 }
 

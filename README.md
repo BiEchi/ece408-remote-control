@@ -24,10 +24,23 @@ This extension contributes the following settings:
 
 ## Known Issues
 
--   The Internet connection seems to be not stable when we perform several accesses consecutively.
 -   Need to change selenium to headless mode.
--   Need to use file IO using node.js.
--   Need to add new packages in `./node_modules`.
+-   Need to change the argument part for users.
+-   Cannot open selenium because of some version errors.
+
+## Contributions
+
+If you want to contribute to the code, please contact Haob.19@intl.zju.edu.cn to gain access to the GitHub Repo.
+
+To set up your development environment, please make the following steps;
+
+```shell
+npm install -g yo generator-code
+yo code // then follow the default settings
+npm install selenium-webdriver
+```
+
+Note that you still need to install the `chromedriver` to start your automata.
 
 ## Release Notes
 
