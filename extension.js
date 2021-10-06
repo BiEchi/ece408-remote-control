@@ -12,25 +12,26 @@ const vscode = require('vscode');
  */
 function activate(context) {
 
-	// This part of  code will only be executed once when your extension is activated
-
-	console.log('Congratulations, your extension "ece408-remote-control" is now active!');
-
+	// This part of code will only be executed once when your extension is activated
 	const account = "haob2";
 	const passwd = "thanbell16";
 	const num_lab = 0;
 
-	// Initialization
-	var webdriver = require('selenium-webdriver'),
-		By = webdriver.By,
-		until = webdriver.until;
-	var driver = new webdriver.Builder()
-		.forBrowser('chrome')
-		.build();
-
 	// this function is already finished
 	let disposable1 = vscode.commands.registerCommand('ece408-remote-control.login', function () {
-		// The code you place here will be executed every time your command is executed
+		
+		// Initialization
+		var webdriver = require('selenium-webdriver'),
+		By = webdriver.By,
+		until = webdriver.until;
+
+		try {
+			var driver = new webdriver.Builder()
+				.forBrowser('safari')
+				.build();
+		} catch (e) {
+			console.log(e);
+		}
 
 		// Certify the website
 		driver.get('https://www.webgpu.net');
@@ -70,11 +71,10 @@ function activate(context) {
 		var code = code_promise.getText();
 
 		// examine the code
-		// code.then((code) => {
-		// 	 vscode.window.showInformationMessage("You've now get " + code);
-		// })
+		code.then((code) => {
+			 vscode.window.showInformationMessage("You've now get " + code);
+		})
 
-		code = "1 #include<wb.h> 2 3 __global__ void cudaPrint(int i) 4 { 5 da 6 7 return; 8 } 9 10 int main(int argc, char **argv) { 11 cudaPrint<<<64, 64>>>(0); 12 cudaDeviceSynchronize(); 13 return 0; 14 }"
 		// process the raw data
 		var reg = /[0-9]+/g;
 		var clean_code = code.replace(reg, "\n");
