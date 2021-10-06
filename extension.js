@@ -2,41 +2,27 @@
 // Import the module and reference it with the alias vscode in your code below
 const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 const { Keyboard } = require('selenium-webdriver/lib/input');
+const { getCombinedModifierFlags } = require('typescript');
 const vscode = require('vscode');
+
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
 
-	// This part of code will only be executed once when your extension is activated
-	const account = "haob2";
-	const passwd = "thanbell16";
-	const num_lab = 0;
+	function bad_ssl(driver) {
+		// website error handling (temporary)
+		var advanced_button = driver.wait(until.elementLocated(By.xpath('//*[@id="details-button"]'), 20));
+		advanced_button.click();
+	
+		var proceed_button = driver.wait(until.elementLocated(By.xpath('//*[@id="proceed-link"]'), 20));
+		proceed_button.click();
+	}
 
-	// this function is already finished
-	let disposable1 = vscode.commands.registerCommand('ece408-remote-control.login', function () {
-		
-		// Initialization
-		var webdriver = require('selenium-webdriver'),
-		By = webdriver.By,
-		until = webdriver.until;
-
-		try {
-			var driver = new webdriver.Builder()
-				.forBrowser('safari')
-				.build();
-		} catch (e) {
-			console.log(e);
-		}
-
-		// Certify the website
-		driver.get('https://www.webgpu.net');
-
-		// Login process
+	function login(driver) {
 		var login_button = driver.wait(until.elementLocated(By.xpath('//*[@id="content"]/div/div/div/div[3]/a[2]/div'), 20));
 		login_button.click();
 
@@ -59,30 +45,61 @@ function activate(context) {
 
 		var code_tab = driver.wait(until.elementLocated(By.xpath('//*[@id="code-tab"]'), 20));
 		code_tab.click();
+	}
 
+	function get_code(driver){
+		// get the code
+		var code_editor = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/textarea'), 20));
+		var code = code_editor.getText();
+
+		// examine the code
+		code.then((code) => {
+				vscode.window.showInformationMessage("You've now got " + code);
+		})
+
+		return code;
+	}
+
+	function save_file(code){
+		const fs = require('fs');
+		const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
+		fs.truncateSync(currentlyOpenTabfilePath);
+		fs.appendFileSync(currentlyOpenTabfilePath, code);
+	}
+
+	// This part of code will only be executed once when your extension is activated
+	const account = "haob2";
+	const passwd = "thanbell16";
+	const num_lab = 0;
+	
+	// Initialization
+	var webdriver = require('selenium-webdriver'),
+	By = webdriver.By,
+	until = webdriver.until;
+
+	var driver = new webdriver.Builder()
+		.forBrowser('chrome')
+		.build();
+
+	// this function is already finished
+	let disposable1 = vscode.commands.registerCommand('ece408-remote-control.login', function () {
+		// Certify the website
+		driver.get('https://www.webgpu.net');
+		// handle the bad SSL certification condition
+		bad_ssl(driver);
+		// Login process
+		login(driver);
+		// feedback
 		vscode.window.showInformationMessage("Successfully logged in to your WebGPU account and accessing Lab" + num_lab.toString() + ".");
 	});
 
 	// this function is still troublesome
 	let disposable2 = vscode.commands.registerCommand('ece408-remote-control.pull', function () {
-
-		// get the raw data
-		var code_promise = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div'), 20));
-		var code = code_promise.getText();
-
-		// examine the code
-		code.then((code) => {
-			 vscode.window.showInformationMessage("You've now get " + code);
-		})
-
-		// process the raw data
-		var reg = /[0-9]+/g;
-		var clean_code = code.replace(reg, "\n");
-
+		// get the code from the lab page
+		var code = get_code(driver);
 		// save the raw data and overwrite the lab project
-		// var fs = require('fs');
-		// fs.writeFileSync("./lab2.cu", "fuck you!");
-
+		save_file(code);
+		// feedback
 		vscode.window.showInformationMessage("You've now successfully pulled the code of lab " + num_lab.toString() + ".");
 	});
 

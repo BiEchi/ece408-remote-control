@@ -1,2 +1,1 @@
-Hello CUDA!
-__shared__ aaa
+nice job!
