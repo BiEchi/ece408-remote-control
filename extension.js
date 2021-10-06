@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 const { Keyboard } = require('selenium-webdriver/lib/input');
+const { alertIsPresent } = require('selenium-webdriver/lib/until');
 const { getCombinedModifierFlags } = require('typescript');
 const vscode = require('vscode');
 
@@ -47,19 +48,6 @@ function activate(context) {
 		code_tab.click();
 	}
 
-	function get_code(driver){
-		// get the code
-		var code_editor = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/textarea'), 20));
-		var code = code_editor.getText();
-
-		// examine the code
-		code.then((code) => {
-				vscode.window.showInformationMessage("You've now got " + code);
-		})
-
-		return code;
-	}
-
 	function save_file(code){
 		const fs = require('fs');
 		const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
@@ -67,10 +55,20 @@ function activate(context) {
 		fs.appendFileSync(currentlyOpenTabfilePath, code);
 	}
 
+	function read_file(){
+		const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
+		const fs = require('fs');
+		const code = fs.readFileSync(currentlyOpenTabfilePath, 'utf8');
+		vscode.window.showInformationMessage("The code you wrote is '" + code + "' with type " + typeof(code));
+
+
+		return code;
+	}
+
 	// This part of code will only be executed once when your extension is activated
 	const account = "haob2";
 	const passwd = "thanbell16";
-	const num_lab = 0;
+	const num_lab = 1;
 	
 	// Initialization
 	var webdriver = require('selenium-webdriver'),
@@ -78,11 +76,11 @@ function activate(context) {
 	until = webdriver.until;
 
 	var driver = new webdriver.Builder()
-		.forBrowser('chrome')
+		.forBrowser('safari')
 		.build();
 
 	// this function is already finished
-	let disposable1 = vscode.commands.registerCommand('ece408-remote-control.login', function () {
+	let login_process = vscode.commands.registerCommand('ece408-remote-control.login', function () {
 		// Certify the website
 		driver.get('https://www.webgpu.net');
 		// handle the bad SSL certification condition
@@ -94,36 +92,33 @@ function activate(context) {
 	});
 
 	// this function is still troublesome
-	let disposable2 = vscode.commands.registerCommand('ece408-remote-control.pull', function () {
-		// get the code from the lab page
-		var code = get_code(driver);
-		// save the raw data and overwrite the lab project
-		save_file(code);
+	let pull_process = vscode.commands.registerCommand('ece408-remote-control.pull', function () {
+		// get the code
+		var code_editor = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/textarea'), 20));
+		var code = code_editor.getText();
+		code.then((code) => {
+			// save the raw data and overwrite the lab project
+			save_file(code);
+		})
+		
 		// feedback
 		vscode.window.showInformationMessage("You've now successfully pulled the code of lab " + num_lab.toString() + ".");
 	});
 
 	// this is the core functionality of this project
-	let disposable3 = vscode.commands.registerCommand('ece408-remote-control.push', function () {
-		const fs = require('fs');
-		fs.readFile('./lab2.cu', 'utf8' , (err, data) => {
-			// if (err) {
-			// 	console.error(err);
-			// 	return;
-			// }
-			vscode.window.showInformationMessage("You've now get" + data);
-		})
+	let push_process = vscode.commands.registerCommand('ece408-remote-control.push', function () {
+		var code = read_file();
 
-		vscode.window.showInformationMessage("You've now successfully pushed the code to lab " + num_lab.toString() + 
-		", and the feedback is stored in './output.txt' now. Check it!");
+
+		vscode.window.showInformationMessage("You've now successfully pushed the code to lab " + num_lab.toString() + "!");
 	});
 
-	let disposable4 = vscode.commands.registerCommand('ece408-remote-control.exit', function () {
+	let exit_process = vscode.commands.registerCommand('ece408-remote-control.exit', function () {
 		driver.quit();
 		vscode.window.showInformationMessage("You've successfully exit your account!");
 	});
 
-	for (let item in {disposable1, disposable2, disposable3, disposable4})
+	for (let item in {login_process, pull_process, push_process, exit_process})
 		context.subscriptions.push(item);
 }
 
