@@ -18,9 +18,8 @@ Hello, our extension uses your code created locally onto VS Code and use them fo
 
 -   Please install the npm tools before you use this extension.
 ```shell
-npm install constants
+npm install fs
 npm install selenium-webdriver
-npm install typescript
 ```
 -   Please download the plug-in called `vscode-cudacpp` after you install this plug-in to gain full experience.
 -   Please install `headless-chrome` or `chromedriver` into your system `PATH`.

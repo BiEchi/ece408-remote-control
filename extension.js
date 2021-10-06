@@ -59,6 +59,15 @@ function activate(context) {
 		return code;
 	}
 
+	function click_run(driver){
+		// click on the "compile & run button" button
+		var compile_button = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[1]/div/div[2]/div[1]/div'), 20));
+		compile_button.click();
+		// click on the "all" dataset button
+		var all_button = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div/div/div[2]/div[1]/div[1]/div/div[2]/div[1]/ul/li[8]/a'), 20));
+		all_button.click();
+	}
+
 	// This part of code will only be executed once when your extension is activated
 	var account = "haob2"; 
 	var passwd = "thanbell16";
@@ -90,7 +99,7 @@ function activate(context) {
 
 	let login_process = vscode.commands.registerCommand('ece408-remote-control.login', function () {
 		// Certify the website
-		driver.get('https://www.baidu.com');
+		driver.get('https://www.webgpu.net');
 		// handle the bad SSL certification condition
 		bad_ssl(driver);
 		// Login process
@@ -101,20 +110,29 @@ function activate(context) {
 
 	let pull_process = vscode.commands.registerCommand('ece408-remote-control.pull', function () {
 		// get the code
-		var code_editor = driver.wait(until.elementLocated(By.xpath('//*[@id="hotsearch-content-wrapper"]/li[1]/a/span[2]'), 20));
+		driver.get('https://www.webgpu.net/mp/' + (num_lab == 0) ? ('9999') : (num_lab+10000).toString() + '/program');
+		var code_editor = driver.wait(until.elementLocated(By.xpath('/html/body/pre'), 20));
 		var code = code_editor.getText();
 		code.then((code) => {
 			// save the raw data and overwrite the lab project
 			vscode.window.showInformationMessage("The code is " + code + " with type " + typeof(code));
 			save_file(code);
 		})
-		
+		// return to the editing page
+		driver.get('https://www.webgpu.net');
+		login(driver);
 		// feedback
 		vscode.window.showInformationMessage("You've now successfully pulled the code of lab " + num_lab.toString() + ".");
 	});
 
 	let push_process = vscode.commands.registerCommand('ece408-remote-control.push', function () {
+		// read the file into the buffer
 		var code = read_file();
+		// transfer the buffer onto the webpage
+
+		// click on the "submit & run button" and "all" datasets
+		click_run(driver);
+
 		vscode.window.showInformationMessage("You've now successfully pushed the code to lab " + num_lab.toString() + "!");
 	});
 
