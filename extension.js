@@ -1,14 +1,9 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-const { info } = require('console');
-const { SSL_OP_EPHEMERAL_RSA } = require('constants');
-const { Keyboard } = require('selenium-webdriver/lib/input');
-const { alertIsPresent } = require('selenium-webdriver/lib/until');
-const { getCombinedModifierFlags } = require('typescript');
+// Please do NOT add anything not related below
 const vscode = require('vscode');
 
-
-// this method is called when your extension is activated
+// this method is called when sion is activated
 // your extension is activated the very first time the command is executed
 /**
  * @param {vscode.ExtensionContext} context
@@ -65,7 +60,8 @@ function activate(context) {
 	}
 
 	// This part of code will only be executed once when your extension is activated
-	var account = "haob2"; var passwd = "thanbell16";
+	var account = "haob2"; 
+	var passwd = "thanbell16";
 	var num_lab = 1; // interger
 
 	let config_process = vscode.commands.registerCommand('ece408-remote-control.config', function () {
@@ -75,24 +71,23 @@ function activate(context) {
 				ignoreFocusOut:true, // when the cursor focuses on other places, the input box is still there
 				placeHolder:'Please input your account, password and your intended lab number: ', // notification
 				prompt:'Use the format like "lyon2 mypasswd 2"',
-			}).then(function(info){
-				var info_array = info.split(" ");
-				account = info_array[0]; passwd = info_array[1];
-				num_lab = parseInt(info_array[2]); // convert to integer
+			}).then(function(information){
+				var information_array = information.split(" ");
+				account = information_array[0]; 
+				passwd = information_array[1];
+				num_lab = parseInt(information_array[2]); // convert to integer
 		});
 	});
 	
 	// Initialization
 	var webdriver = require('selenium-webdriver'),
-	By = webdriver.By,
-	until = webdriver.until;
+		By = webdriver.By,
+		until = webdriver.until;
 
 	var driver = new webdriver.Builder()
 		.forBrowser('chrome')
 		.build();
 
-
-	// this function is already finished
 	let login_process = vscode.commands.registerCommand('ece408-remote-control.login', function () {
 		// Certify the website
 		driver.get('https://www.webgpu.net');
@@ -102,22 +97,15 @@ function activate(context) {
 		login(driver);
 		// feedback
 		vscode.window.showInformationMessage("Successfully logged in to your WebGPU account and accessing Lab" + num_lab.toString() + ".");
-
-		vscode.commands.executeCommand('workbench.action.openSettingsJson')
-			.then((s) => {
-				if (s === null) {
-					console.log("Open Settins (JSON) successed");
-				}
-			});
 	});
 
-	// this function is still troublesome
 	let pull_process = vscode.commands.registerCommand('ece408-remote-control.pull', function () {
 		// get the code
-		var code_editor = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/textarea'), 20));
+		var code_editor = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div/div/div[2]/div[1]/div[2]/div/span/textarea'), 20));
 		var code = code_editor.getText();
 		code.then((code) => {
 			// save the raw data and overwrite the lab project
+			vscode.window.showInformationMessage("The code is " + code + " with type " + typeof(code));
 			save_file(code);
 		})
 		
@@ -125,11 +113,8 @@ function activate(context) {
 		vscode.window.showInformationMessage("You've now successfully pulled the code of lab " + num_lab.toString() + ".");
 	});
 
-	// this is the core functionality of this project
 	let push_process = vscode.commands.registerCommand('ece408-remote-control.push', function () {
 		var code = read_file();
-
-
 		vscode.window.showInformationMessage("You've now successfully pushed the code to lab " + num_lab.toString() + "!");
 	});
 
