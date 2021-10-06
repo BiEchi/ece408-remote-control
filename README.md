@@ -41,6 +41,14 @@ npm install selenium-webdriver
 
 Note that you still need to install the `chromedriver` to start your automata.
 
+To renew versions on the VS Code Extension Marketplace, please type 
+
+```shell
+npm i vsce -g # if you did not install vsce
+vsce package # if you want to make a package
+vsce publish # if you want to publish immediately
+```
+
 ## Release Notes
 
 ### 0.0.1
