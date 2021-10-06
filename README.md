@@ -6,13 +6,13 @@ Hello, our extension uses your code created locally onto VS Code and use them fo
 
 ## Steps
 - ctrl+shift+P, then `config`:
-* `account`: your account name (Net ID for UIUC) for your WebGPU.
-* `passwd`: your password for your WebGPU.
-* `num_lab`: the number of lab you want to finish.
-ctrl+shift+P, then `login`.
-ctrl+shift+P, then `pull`.
-ctrl+shift+P, then `push`.
-ctrl+shift+P, then `exit`.
+- * `account`: your account name (Net ID for UIUC) for your WebGPU.
+- * `passwd`: your password for your WebGPU.
+- * `num_lab`: the number of lab you want to finish.
+- ctrl+shift+P, then `login`.
+- ctrl+shift+P, then `pull`.
+- ctrl+shift+P, then `push`.
+- ctrl+shift+P, then `exit`.
 
 ## Requirements
 
