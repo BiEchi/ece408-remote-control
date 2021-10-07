@@ -55,7 +55,6 @@ function activate(context) {
 		const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
 		const fs = require('fs');
 		const code = fs.readFileSync(currentlyOpenTabfilePath, 'utf8');
-		vscode.window.showInformationMessage("The code you wrote is '" + code + "' with type " + typeof(code));
 		return code;
 	}
 
@@ -66,6 +65,40 @@ function activate(context) {
 		// click on the "all" dataset button
 		var all_button = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div/div/div[2]/div[1]/div[1]/div/div[2]/div[1]/ul/li[8]/a'), 20));
 		all_button.click();
+	}
+
+	function push_code(driver, code){
+		// drag the code from the local file and push it to the webgpu website
+		// var input_box = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/textarea'), 20));
+		var input_box = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]'), 20));
+		input_box.sendKeys(code);
+	}
+
+	function download_html(driver){
+		// driver.get("https://baidu.com"); // test code
+		driver.getCurrentUrl() // nonsense, only for syntax
+			.then(function() {
+				return driver.getCurrentUrl();
+			})
+			.then(function(currentUrl) {
+				// work with the current url of browser
+				const rp = require('request-promise');
+				var html_source = rp(currentUrl);
+				html_source.then(function(html_source){
+					// save the file to ./feedback.html
+					const fs = require('fs');
+					const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
+					const index = currentlyOpenTabfilePath.lastIndexOf("\/");  
+					const currentlyOpenTabdirPath = currentlyOpenTabfilePath.substring(0, index+1) + "/feedback.html"
+					fs.truncateSync(currentlyOpenTabdirPath);
+					fs.appendFileSync(currentlyOpenTabdirPath, html_source);
+				});
+			});
+	}
+
+	function render_html(){
+		// only for testing
+		vscode.window.showInformationMessage("Please use the Live Share extension to render the HTML code!");
 	}
 
 	// This part of code will only be executed once when your extension is activated
@@ -110,30 +143,36 @@ function activate(context) {
 
 	let pull_process = vscode.commands.registerCommand('ece408-remote-control.pull', function () {
 		// get the code
-		driver.get('https://www.webgpu.net/mp/' + (num_lab == 0) ? ('9999') : (num_lab+10000).toString() + '/program');
+		var program_url;
+		if (num_lab == 0) {
+			program_url = 'https://www.webgpu.net/mp/9999/program';
+		} else {
+			program_url = 'https://www.webgpu.net/' + (num_lab+10000).toString() + '/prorgam';
+		}
+		driver.get(program_url);
 		var code_editor = driver.wait(until.elementLocated(By.xpath('/html/body/pre'), 20));
 		var code = code_editor.getText();
 		code.then((code) => {
 			// save the raw data and overwrite the lab project
-			vscode.window.showInformationMessage("The code is " + code + " with type " + typeof(code));
 			save_file(code);
 		})
 		// return to the editing page
 		driver.get('https://www.webgpu.net');
+		// go through the login subroutine again
 		login(driver);
-		// feedback
-		vscode.window.showInformationMessage("You've now successfully pulled the code of lab " + num_lab.toString() + ".");
 	});
 
 	let push_process = vscode.commands.registerCommand('ece408-remote-control.push', function () {
 		// read the file into the buffer
 		var code = read_file();
 		// transfer the buffer onto the webpage
-
+		push_code(driver, code);
 		// click on the "submit & run button" and "all" datasets
 		click_run(driver);
-
-		vscode.window.showInformationMessage("You've now successfully pushed the code to lab " + num_lab.toString() + "!");
+		// pull down the whole HTML source code and save in an HTML file
+		download_html(driver);
+		// render the HTML source code locally
+		render_html();
 	});
 
 	let exit_process = vscode.commands.registerCommand('ece408-remote-control.exit', function () {

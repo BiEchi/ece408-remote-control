@@ -22,6 +22,7 @@ npm install fs
 npm install selenium-webdriver
 ```
 -   Please download the plug-in called `vscode-cudacpp` after you install this plug-in to gain full experience.
+-   Please download the plug-in called `live server` after you install this plug-in to activate the feedback rendering.
 -   Please install `headless-chrome` or `chromedriver` into your system `PATH`.
     -   Note that you must download exactly the same version of `chromedriver` as your chrome browser if you want to use the `chromedriver` as your selenium driver.
     -   Note that the chrome browser is likely to be updated automatically when a new version is released. In this case, please update to the newest version of `chromedriver` too.
