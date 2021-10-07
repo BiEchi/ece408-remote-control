@@ -58,6 +58,13 @@ function activate(context) {
 		return code;
 	}
 
+	function push_code(driver, code){
+		// drag the code from the local file and push it to the webgpu website
+		// var input_box = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/textarea'), 20));
+		var input_box = driver.wait(until.elementLocated(By.xpath('*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div/div[5]'), 20));
+		input_box.sendKeys(code);
+	}
+
 	function click_run(driver){
 		// click on the "compile & run button" button
 		var compile_button = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[1]/div/div[2]/div[1]/div'), 20));
@@ -65,13 +72,6 @@ function activate(context) {
 		// click on the "all" dataset button
 		var all_button = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div/div/div[2]/div[1]/div[1]/div/div[2]/div[1]/ul/li[8]/a'), 20));
 		all_button.click();
-	}
-
-	function push_code(driver, code){
-		// drag the code from the local file and push it to the webgpu website
-		// var input_box = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/textarea'), 20));
-		var input_box = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]'), 20));
-		input_box.sendKeys(code);
 	}
 
 	function download_html(driver){

@@ -1,51 +1,81 @@
 # ece408-remote-control README
 
-## Features
+```shell
+Author = Jack BAI, ZJUI Junior
+ContactEmail = Haob2@illinois.edu
+```
 
-Hello, our extension uses your code created locally onto VS Code and use them for posting on the webgpu website and automatically use it for running the tests online. Note that all.
+## Functionality
 
-## Steps
-- ctrl+shift+P, then `config`:
-- * `account`: your account name (Net ID for UIUC) for your WebGPU.
-- * `passwd`: your password for your WebGPU.
-- * `num_lab`: the number of lab you want to finish.
-- ctrl+shift+P, then `login`.
-- ctrl+shift+P, then `pull`.
-- ctrl+shift+P, then `push`.
-- ctrl+shift+P, then `exit`.
+My extension uses your code created locally onto VS Code and use them for posting on the webgpu website and automatically use it for running the tests online.
 
-## Requirements
+## Getting started
 
--   Please install the npm tools before you use this extension.
+Before you can use the extension, there are some setting-up steps to follow.
+
+### Install the NPM dependencies
+
 ```shell
 npm install fs
 npm install selenium-webdriver
+npm install request
+npm install request-promise
 ```
--   Please download the plug-in called `vscode-cudacpp` after you install this plug-in to gain full experience.
--   Please download the plug-in called `live server` after you install this plug-in to activate the feedback rendering.
--   Please install `headless-chrome` or `chromedriver` into your system `PATH`.
-    -   Note that you must download exactly the same version of `chromedriver` as your chrome browser if you want to use the `chromedriver` as your selenium driver.
-    -   Note that the chrome browser is likely to be updated automatically when a new version is released. In this case, please update to the newest version of `chromedriver` too.
-    -   We strongly recommend you to install the `chromedriver` into the system software directory immediately, i.e. it should appear in `/usr/local/bin/chromedriver`.
+### Install the Chrome driver
+
+You also need to install `headless-chrome` or `chromedriver` into your system `PATH`.
+
+-   Note that you must download exactly the same version of `chromedriver` as your chrome browser if you want to use the `chromedriver` as your selenium driver.
+-   Note that the chrome browser is likely to be updated automatically when a new version is released. In this case, please update to the newest version of `chromedriver` too.
+-   We strongly recommend you to install the `chromedriver` into the system software directory immediately, i.e. it should appear in `/usr/local/bin/chromedriver`.
+
+### Install the other extensions
+
+In your VS Code workspace, please install the following extensions:
+
+-   `vscode-cudacpp`: CUDA C++ syntax highlight.
+-   `Live Server`: Local rendering of feedback HTML files.
+
+### Set up your working directory
+
+In your working directory, make two empty files called `feedback.html` and `lab.cu` respectively.
+
+```shell
+./ece408mps
+|- feedback.html
+|- lab.cu
+```
+
+## Features
+
+- ctrl+shift+P, then enter `config`:
+    - `account`: your account name (Net ID for UIUC) for your WebGPU.
+    - `passwd`: your password for your WebGPU.`num_lab`: the number of lab you want to finish.
+- ctrl+shift+P, then enter `login`.
+- ctrl+shift+P, then enter `pull`.
+- ctrl+shift+P, then enter `push`.
+- ctrl+shift+P, then enter `exit`.
 
 ## Known Issues
 
--   Need to change selenium to headless mode.
--   **FATAL: Cannot open selenium because of some version errors.****
+-   (GLOBAL) Need to change selenium to headless mode.
+-   (PULL) Need to betterfy connecttion with the server.
+    -   A possible solution is to change the code to pull down the website from the weisite without `/program`, because accessing a new website (i.e. `.../program`) takes time.
+-   **(PUSH) Cannot push your code back to the WebGPU website.**
+-   (PUSH) Need to download only contents above the “Program Code” part.
 
 ## Contributions
 
-If you want to contribute to the code, please contact Haob.19@intl.zju.edu.cn to gain access to the GitHub Repo.
+If you want to contribute to the code, please contact Haob.19@intl.zju.edu.cn to gain access to the [GitHub Repo](https://github.com/BiEchi/ece408-remote-control).
 
-To set up your development environment, please make the following steps;
+Before you start, please make sure you’ve already completed all steps in the *requirements* part.
+
+### Set up your working environment
 
 ```shell
 npm install -g yo generator-code
 yo code // then follow the default settings
-npm install selenium-webdriver
 ```
-
-Note that you still need to install the `chromedriver` to start your automata.
 
 To renew versions on the VS Code Extension Marketplace, please type 
 
@@ -76,7 +106,7 @@ vsce publish # if you want to publish immediately
 -   Updated the icon for the extension.
 -   Initialized `push` execution.
 
-### 0.7.0
+### 0.7.0 - BREAKTHROUGH 1
 
 -   Completed `login` execution.
 -   Completed `exit` execution.
@@ -95,3 +125,9 @@ vsce publish # if you want to publish immediately
 ### 0.9.2
 
 -   Fixed the bugs on the beginning of the code.
+
+### 0.9.5
+
+-   Completed all parts in the `push` execution except for pushing the code to the remote website.
+-   Revised the workflow and almost completed `README.md`.
+
