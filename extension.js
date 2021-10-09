@@ -10,6 +10,21 @@ const vscode = require('vscode');
  */
 function activate(context) {
 
+		// This part of code will only be executed once when your extension is activated
+		var account = "haob2"; 
+		var passwd = "thanbell16";
+		var num_lab = 1; // interger
+
+		// Initialization
+		const {Builder, By, Key, until} = require('selenium-webdriver');
+		var webdriver = require('selenium-webdriver');
+	
+		var driver = new webdriver.Builder()
+			.forBrowser('chrome')
+			.build();
+		// switch to full screen
+		driver.manage().window().maximize(); 
+
 	function bad_ssl(driver) {
 		// website error handling (temporary)
 		var advanced_button = driver.wait(until.elementLocated(By.xpath('//*[@id="details-button"]'), 20));
@@ -31,9 +46,13 @@ function activate(context) {
 		var confirm_login_button = driver.wait(until.elementLocated(By.xpath('/html/body/div/div/div/form/div[3]/div/button'), 20));
 		confirm_login_button.click();
 
-		// Go to the number of lab you want to go
-		var dropdown_toggle = driver.wait(until.elementLocated(By.xpath('/html/body/nav/div/nav/ul[1]/li[1]/a'), 20));
+		// optional, only for narrow size pattern
+		var dropdown_toggle = driver.wait(until.elementLocated(By.xpath('/html/body/nav/div/div/button'), 20));
 		dropdown_toggle.click();
+
+		// Go to the number of lab you want
+		var lab_toggle = driver.wait(until.elementLocated(By.xpath('/html/body/nav/div/nav/ul[1]/li[1]/a'), 20));
+		lab_toggle.click();
 
 		var xpath_num = num_lab + 4;
 		var xpath_lab_button = '/html/body/nav/div/nav/ul[1]/li[1]/ul/li[' + xpath_num.toString() + ']/a';
@@ -58,11 +77,30 @@ function activate(context) {
 		return code;
 	}
 
-	function push_code(driver, code){
-		// drag the code from the local file and push it to the webgpu website
-		// var input_box = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/textarea'), 20));
-		var input_box = driver.wait(until.elementLocated(By.xpath('*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div/div[5]'), 20));
-		input_box.sendKeys(code);
+	function push_code(code){
+		// call the python script to paste the content
+		const spawn = require("child_process").spawn;
+
+		// copy the variable onto the clipboard
+		const python_copy = spawn('python',["./copy.py", code]);
+		python_copy.stdout.on('data', (data) => {
+			if (data == 'success') vscode.window.showInformationMessage("Python copy returns value " + data);
+			else vscode.window.showInformationMessage("Python copy returns value " + 'fail');
+		});
+
+		// Move the cursor to the element and click 
+		var code_line = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div/div[5]/div[1]/pre/span/span'), 20));
+		code_line.click();
+
+		// last test
+		const actions = driver.actions();
+		actions
+		.click(code_line)
+		.keyDown(Key.COMMAND)
+		.sendKeys('a')
+		.sendKeys('v')
+		.keyUp(Key.COMMAND)
+		.perform();
 	}
 
 	function click_run(driver){
@@ -101,15 +139,11 @@ function activate(context) {
 		vscode.window.showInformationMessage("Please use the Live Share extension to render the HTML code!");
 	}
 
-	// This part of code will only be executed once when your extension is activated
-	var account = "haob2"; 
-	var passwd = "thanbell16";
-	var num_lab = 1; // interger
 
 	let config_process = vscode.commands.registerCommand('ece408-remote-control.config', function () {
 		vscode.window.showInputBox(
 			{
-				password:false, 
+				password:false,
 				ignoreFocusOut:true, // when the cursor focuses on other places, the input box is still there
 				placeHolder:'Please input your account, password and your intended lab number: ', // notification
 				prompt:'Use the format like "lyon2 mypasswd 2"',
@@ -121,20 +155,12 @@ function activate(context) {
 		});
 	});
 	
-	// Initialization
-	var webdriver = require('selenium-webdriver'),
-		By = webdriver.By,
-		until = webdriver.until;
-
-	var driver = new webdriver.Builder()
-		.forBrowser('chrome')
-		.build();
 
 	let login_process = vscode.commands.registerCommand('ece408-remote-control.login', function () {
 		// Certify the website
 		driver.get('https://www.webgpu.net');
 		bad_ssl(driver);
-		login(driver)
+		login(driver);
 		vscode.window.showInformationMessage("Successfully logged in to your WebGPU account and accessing Lab" + num_lab.toString() + ".");
 	});
 
@@ -166,14 +192,14 @@ function activate(context) {
 	let push_process = vscode.commands.registerCommand('ece408-remote-control.push', function () {
 		// read the file into the buffer
 		var code = read_file();
-		// transfer the buffer onto the webpage
-		push_code(driver, code);
+		// TODO: transfer the buffer onto the webpage
+		push_code(code);
 		// click on the "submit & run button" and "all" datasets
 		click_run(driver);
 		// pull down the whole HTML source code and save in an HTML file
-		download_html(driver);
+		// download_html(driver);
 		// render the HTML source code locally
-		render_html();
+		// render_html();
 	});
 
 	let exit_process = vscode.commands.registerCommand('ece408-remote-control.exit', function () {
