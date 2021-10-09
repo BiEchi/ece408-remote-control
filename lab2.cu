@@ -1,4 +1,5 @@
 #include <wb.h>
+#include <stdio.h>
 
 #define wbCheck(stmt)                                                     \
   do {                                                                    \

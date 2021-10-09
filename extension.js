@@ -13,9 +13,10 @@ function activate(context) {
 	// ********** GLOBAL-PARAMETERS ********** //
 
 	// This part of code will only be executed once when your extension is activated
-	var account = 'haob2'; 
-	var passwd = 'thanbell16';
-	var num_lab = 2; // -1 for default
+	var account; 
+	var passwd;
+	var num_lab = -1; // -1 for default
+	var machine = 'win'; // 'win' for default
 	// lookup table for the #lab-addr map
 	var addr_list = ['9999', '10001', '10002', '10003', '10010', '10004', '10005', '10011', '10124'];
 	var addr = addr_list[num_lab];
@@ -88,31 +89,39 @@ function activate(context) {
 		return code;
 	}
 
-	function sleep(delay) {
-		var start = (new Date()).getTime();
-		while ((new Date()).getTime() - start < delay) {
-			// 使用  continue 实现；
-			continue; 
-		}
-	}
-
 	function push_code_and_run(){
 		// Move the cursor to the first line of code and click 
 		var code_line = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div/div[5]/div[1]/pre/span/span'), 20));
 		var compile_button = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[1]/div/div[2]/div[1]/div'), 20));
 		var all_button = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div/div/div[2]/div[1]/div[1]/div/div[2]/div[1]/ul/li[8]/a'), 20));
 		const actions = driver.actions();
-		actions
-		.click(code_line)
-		.keyDown(Key.COMMAND)
-		.sendKeys('a')
-		.sendKeys('v')
-		// .sendKeys('s')
-		.keyUp(Key.COMMAND)
-		// .sendKeys(code)
-		.click(compile_button)
-		.click(all_button)
-		.perform();
+
+		if (machine == 'mac'){
+			actions
+			.click(code_line)
+			.keyDown(Key.COMMAND)
+			.sendKeys('a')
+			.sendKeys('v')
+			.sendKeys('s')
+			.keyUp(Key.COMMAND)
+			// .sendKeys(code) // we use the approach to copy the code yourself instead
+			.click(compile_button)
+			.click(all_button)
+			.perform();
+		} else {
+			actions
+			.click(code_line)
+			.keyDown(Key.CONTROL)
+			.sendKeys('a')
+			.sendKeys('v')
+			.sendKeys('s')
+			.keyUp(Key.CONTROL)
+			// .sendKeys(code) // we use the approach to copy the code yourself instead
+			.click(compile_button)
+			.click(all_button)
+			.perform();
+		}
+
 	}
 
 	function download_html(driver){
@@ -141,13 +150,14 @@ function activate(context) {
 			{
 				password:false,
 				ignoreFocusOut:true, // when the cursor focuses on other places, the input box is still there
-				placeHolder:'Please input your account, password and your intended lab number: ', // notification
-				prompt:'Use the format like "lyon2 mypasswd 2"',
+				placeHolder:'<account> <password> <intended lab number> <machine type>', // notification
+				prompt:'Example: "lyon2 mypasswd 2 win". Note that for the machine type, only "win" or "mac" are allowed!',
 			}).then(function(information){
 				var information_array = information.split(" ");
 				account = information_array[0]; 
 				passwd = information_array[1];
 				num_lab = parseInt(information_array[2]); // convert to integer
+				machine = information_array[3];
 		});
 	});
 	

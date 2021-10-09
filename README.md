@@ -16,35 +16,24 @@ Before you can use the extension, there are some setting-up steps to follow.
 ### Install the NPM dependencies
 
 ```shell
-npm install fs
-npm install selenium-webdriver
-npm install request
-npm install request-promise
+npm install
 ```
 ### Install the Chrome driver
 
-You also need to install `headless-chrome` or `chromedriver` into your system `PATH`.
+You also need to install `chromedriver` into your system `PATH`.
 
--   Note that you must download exactly the same version of `chromedriver` as your chrome browser if you want to use the `chromedriver` as your selenium driver.
--   Note that the chrome browser is likely to be updated automatically when a new version is released. In this case, please update to the newest version of `chromedriver` too.
--   We strongly recommend you to install the `chromedriver` into the system software directory immediately, i.e. it should appear in `/usr/local/bin/chromedriver`.
+-   You must download exactly the same version of `chromedriver` as your chrome browser if you want to use the `chromedriver` as your selenium driver. The chrome browser on your machine is likely to be updated automatically when a new version is released. In this case, please update to the newest version of `chromedriver` too.
+-   I strongly recommend you to install the `chromedriver` into the system software directory immediately, i.e. it should appear in `/usr/local/bin/chromedriver`.
 
 ### Install the other extensions
 
 In your VS Code workspace, please install the following extensions:
 
 -   `vscode-cudacpp`: CUDA C++ syntax highlight.
--   `Live Server`: Local rendering of feedback HTML files.
 
 ### Set up your working directory
 
-In your working directory, make two empty files called `feedback.html` and `lab.cu` respectively.
-
-```shell
-./ece408mps
-|- feedback.html
-|- lab.cu
-```
+When starting, you should use the VS Code to open your `.cu` CUDA source 
 
 ## Features
 

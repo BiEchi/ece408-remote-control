@@ -2,7 +2,7 @@
   "name": "ece408-remote-control",
   "displayName": "ECE408 Remote Control",
   "description": "This extension is designed for ECE408 students to push the code to the remote website (webgpu.net) and automatically give a feed back through the built-in browser of vs code.",
-  "version": "0.9.6",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -19,7 +19,8 @@
   "main": "extension.js",
   "icon": "images/icon.png",
   "contributes": {
-    "commands": [
+    "commands":
+    [
       {
         "command": "ece408-remote-control.config",
         "title": "config"
@@ -40,6 +41,34 @@
         "command": "ece408-remote-control.exit",
         "title": "exit"
       }
+    ],
+    "keybindings":
+    [
+        {
+            "key": "f1",
+            "command": "ece408-remote-control.config",
+            "when": "editorTextFocus"
+        },
+        {
+            "key": "f2",
+            "command": "ece408-remote-control.login",
+            "when": "editorTextFocus"
+        },
+        {
+            "key": "f3",
+            "command": "ece408-remote-control.pull",
+            "when": "editorTextFocus"
+        },
+        {
+            "key": "f5",
+            "command": "ece408-remote-control.push",
+            "when": "editorTextFocus"
+        },
+        {
+            "key": "f12",
+            "command": "ece408-remote-control.exit",
+            "when": "editorTextFocus"
+        }
     ]
   },
   "scripts": {
@@ -67,8 +96,7 @@
     "http": "^0.0.1-security",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "selenium-webdriver": "^4.0.0-rc-2",
-    "sleep": "^6.3.0"
+    "selenium-webdriver": "^4.0.0-rc-2"
   },
   "repository": {
     "type": "git",
