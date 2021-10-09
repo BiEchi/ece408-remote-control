@@ -1,6 +1,6 @@
 // MP 1
 #include <wb.h>
-what the fuck are you doing?
+
 __global__ void vecAdd(float *in1, float *in2, float *out, int len) {
   //@@ Insert code to implement vector addition here
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -56,14 +56,6 @@ int main(int argc, char **argv) {
   //@@ Copy the GPU memory back to the CPU here
   cudaMemcpy(hostOutput, deviceOutput, size, cudaMemcpyDeviceToHost);
   wbTime_stop(Copy, "Copying output memory to the CPU");
-
-  //@@ Examination
-  for (int iter = 0; iter < inputLength; iter++) {
-      wbLog(TRACE, "You're executing row ", iter);
-      wbLog(TRACE, "The input hostInput1 is ", hostInput1[iter]);
-      wbLog(TRACE, "The input hostInput2 is ", hostInput2[iter]);
-      wbLog(TRACE, "The output hostOutput is ", hostOutput[iter]);
-  }
   
   wbTime_start(GPU, "Freeing GPU Memory");
   //@@ Free the GPU memory here

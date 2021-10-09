@@ -133,33 +133,34 @@ function activate(context) {
 	let login_process = vscode.commands.registerCommand('ece408-remote-control.login', function () {
 		// Certify the website
 		driver.get('https://www.webgpu.net');
-		// handle the bad SSL certification condition
 		bad_ssl(driver);
-		// Login process
-		login(driver);
-		// feedback
+		login(driver)
 		vscode.window.showInformationMessage("Successfully logged in to your WebGPU account and accessing Lab" + num_lab.toString() + ".");
 	});
 
 	let pull_process = vscode.commands.registerCommand('ece408-remote-control.pull', function () {
 		// get the code
-		var program_url;
-		if (num_lab == 0) {
-			program_url = 'https://www.webgpu.net/mp/9999/program';
-		} else {
-			program_url = 'https://www.webgpu.net/' + (num_lab+10000).toString() + '/prorgam';
-		}
-		driver.get(program_url);
-		var code_editor = driver.wait(until.elementLocated(By.xpath('/html/body/pre'), 20));
-		var code = code_editor.getText();
-		code.then((code) => {
-			// save the raw data and overwrite the lab project
-			save_file(code);
+		driver.getCurrentUrl() // nonsense, only for syntax
+		.then(function() {
+			return driver.getCurrentUrl();
 		})
-		// return to the editing page
-		driver.get('https://www.webgpu.net');
-		// go through the login subroutine again
-		login(driver);
+		.then(function(currentUrl) {
+			// work with the current url of browser
+			var code_editor = driver.wait(until.elementLocated(By.xpath('/html/body/pre'), 20));
+			driver.get(currentUrl + "/program/");
+			return code_editor;
+		})
+		.then(function(code_editor){
+			var code = code_editor.getText();
+			code.then((code) => {
+				// save the raw data and overwrite the lab project
+				save_file(code);
+				// return to the editing page
+				driver.get('https://www.webgpu.net');
+				// go through the login subroutine again
+				login(driver);
+			})
+		})
 	});
 
 	let push_process = vscode.commands.registerCommand('ece408-remote-control.push', function () {

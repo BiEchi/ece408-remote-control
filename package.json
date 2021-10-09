@@ -2,7 +2,7 @@
   "name": "ece408-remote-control",
   "displayName": "ECE408 Remote Control",
   "description": "This extension is designed for ECE408 students to push the code to the remote website (webgpu.net) and automatically give a feed back through the built-in browser of vs code.",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "engines": {
     "vscode": "^1.60.0"
   },

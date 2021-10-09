@@ -131,3 +131,6 @@ vsce publish # if you want to publish immediately
 -   Completed all parts in the `push` execution except for pushing the code to the remote website.
 -   Revised the workflow and almost completed `README.md`.
 
+### 0.9.6
+
+-   Renewed the icon.
