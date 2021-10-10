@@ -6,6 +6,23 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 
 
+## [1.0.4] - 2021-10-10
+
+### Added
+
+-   Trouble-shotting part in [README](./README.md).
+-   Production support for Mac users.
+
+
+
+## [1.0.1] - 2021-10-10
+
+### Added
+
+-   Production support for Windows users.
+
+
+
 ## [1.0.0] - 2021-10-10 {MILESTONE}
 
 ### Added
