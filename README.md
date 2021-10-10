@@ -62,7 +62,7 @@ Note that you **must** use `.cu` as the postfix of your working file, or the ext
 
 To set up the working environment, you need to install my extension first. After you install it, you can see the interface as shown below. Please click on the "security" and trust my extension button if it is not yet trusted.
 
-![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-055919.png)
+![overall](./images/readme_about/overall.png)
 
 ### Install the shell dependencies
 
@@ -80,7 +80,7 @@ You also need to install `chromedriver` into your system `PATH`.
 #### Before started
 
 Before you install the chromedriver, you should have:
-![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-061739.png)
+![before started](./images/readme_about/before_started.png)
 
 Then you need to install the `chromedriver`. 
 
@@ -88,21 +88,21 @@ Then you need to install the `chromedriver`.
 
 Please open the current Chrome (if you have) and check which version you're in. For example, mine is 94.0.4606.
 
-![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-062142.png)
+![check for right version](./images/readme_about/check_for_right_version.png)
 
 #### Download the correct version of chromedriver
 
 Go to [the download website](https://chromedriver.chromium.org/) to download the correct version of ChromeDriver. If you're using Windows, make sure you download the Windows version. I'm using Mac, so I'll download the Mac version.
 
-![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-062342.png)
+![correct version](./images/readme_about/correct_version.png)
 
 After downloading, please unzip the file and move it to your system PATH.
 
-![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-062504.png)
+![move into PATH](./images/readme_about/move_into_path.png)
 
 Then please check whether you've successfully installed your chromedriver. If you see the feedback below, you're all set.
 
-![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-062541.png)
+![examine](./images/readme_about/examine.png)
 
 Notes:
 -   You must download exactly the same version of `chromedriver` as your chrome browser if you want to use the `chromedriver` as your selenium driver. The chrome browser on your machine is likely to be updated automatically when a new version is released. In this case, please update to the newest version of `chromedriver` too.
