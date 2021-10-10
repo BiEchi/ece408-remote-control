@@ -23,6 +23,7 @@
     - [Pull](#pull)
     - [Push](#push)
     - [Exit](#exit)
+  - [Trouble-shooting](#trouble-shooting)
   - [Possible Improvements](#possible-improvements)
   - [Issue Report](#issue-report)
   - [Contributions](#contributions)
@@ -73,7 +74,7 @@ To set up the working environment, you need to install my extension first. After
 brew install pbcopy
 ```
 
-`If` you're currently using Windows, `clip.exe` should already be in your system PATH. You can open `Powershell` and type in `ls | clip.exe` to check.
+`If` you're currently using Windows, `| clip` should already be in your system PATH for `cmd`. You can open `cmd.exe` (not `powershell`) and type in `echo 1 | clip` to check.
 
 ### Install the Chrome driver
 
@@ -163,6 +164,18 @@ This part is fully automated. Just type in `f5` and everything is set. After thi
 This part is to simply exit the Chrome browser and shut down the Internet connection to keep your account safe.
 
 ![push](images/readme_about/exit.gif)
+
+## Trouble-shooting
+
+
+| Error | Cause | Solution | 
+| -------- | --------------- | ---- | 
+| `config` does not exist     | Did not install `chromedriver`      | Install `chromedriver`    | 
+| Installed `chromedriver` did not launch     | Chrome Version not right       |  Check the version of Chrome and download the corresponding `chromedriver`   | 
+| Not able to connect to WebGPU | Internet failure | Use UIUC (or other legal) VPN if you're in China; go to a place where Internet connection is better |
+| Automation stops | Asynchronization function failed | refresh your page by hand |
+| `push` did not change content on WebGPU | Did not install `pbcopy` on your Mac, or wrong-typed config about 'mac' or 'win' | `brew install pbcopy` or press `f1` and re-config
+
 
 ## Possible Improvements
 
