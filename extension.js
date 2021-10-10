@@ -1,16 +1,47 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-// Please do NOT add anything not related below
+//=============================================================================
+//
+//   VS Code Extension for the lecture
+//
+//   "Applied Parallel Programming"
+//
+//   Jack BAI
+//
+//   Copyright (C) 2021 by Hepta Workshop
+//
+//-----------------------------------------------------------------------------
+//
+//                                License
+//
+//   This program is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU General Public License
+//   as published by the Free Software Foundation; either version 2
+//   of the License, or (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 51 Franklin Street, Fifth Floor,
+//   Boston, MA  02110-1301, USA.
+//
+//=============================================================================
+
 const vscode = require('vscode');
 
-// this method is called when sion is activated
-// your extension is activated the very first time the command is executed
+
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
 
-	// ********** GLOBAL-PARAMETERS ********** //
+	//=============================================================================
+	//
+	//  GLOBAL PARAMETERS
+	//
+	//=============================================================================
 
 	// This part of code will only be executed once when your extension is activated
 	var account; 
@@ -30,10 +61,13 @@ function activate(context) {
 		.forBrowser('chrome')
 		.build();
 
-	// switch to full screen (only once)
 	// driver.manage().window().maximize(); 
 
-	// ********** HELPER-FUNCTIONS ********** //
+	//=============================================================================
+	//
+	//  HELPER FUNCTIONS
+	//
+	//=============================================================================
 
 	function bad_ssl(driver) {
 		// website error handling (temporary)
@@ -157,7 +191,11 @@ function activate(context) {
 	}
 
 
-	// ********** CALLER-FUNCTIONS ********** //
+	//=============================================================================
+	//
+	//  CALLER FUNCTIONS
+	//
+	//=============================================================================
 
 	let config_process = vscode.commands.registerCommand('ece408-remote-control.config', function () {
 		vscode.window.showInputBox(
