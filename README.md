@@ -2,6 +2,8 @@
 ![build](https://img.shields.io/badge/build-passing-green) ![license](https://img.shields.io/badge/license-gpl-green) ![release](https://img.shields.io/badge/release-1.0.0--beta-green) 
 ![engine](https://img.shields.io/badge/engine-nodejs-yellow) ![machine type](https://img.shields.io/badge/machine-win--mac--linux-yellow)
 
+<img src='./images/readme_about/signature.png' width="100">
+
 - [Your next WebGPU, is not WebGPU](#your-next-webgpu-is-not-webgpu)
   - [Introduction](#introduction)
   - [KEEP IT OPEN-SOURCE](#keep-it-open-source)
