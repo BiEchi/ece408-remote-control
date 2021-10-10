@@ -16,7 +16,7 @@ function activate(context) {
 	var account; 
 	var passwd;
 	var num_lab = 999; // 999 for default
-	var machine = 'win'; // 'win' for default
+	var machine = 'mac'; // 'mac' for default
 
 	// lookup table for the num_lab-to-addr map
 	var addr_list = ['9999', '10001', '10002', '10003', '10010', '10004', '10005', '10011', '10124'];
@@ -91,6 +91,16 @@ function activate(context) {
 	}
 
 	function push_code_and_run(){
+		// copy the code onto the clipboard of your machine
+		vscode.window.showInformationMessage("Reminder: please save your code before you push!");
+		var exec = require('child_process').exec;
+		const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
+		if (machine == 'mac'){
+			exec(`cat ${currentlyOpenTabfilePath} | pbcopy`);
+		} else {
+			exec(`cat ${currentlyOpenTabfilePath} | clip.exe`);
+		}
+		
 		// Move the cursor to the first line of code and click 
 		var code_line = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div/div[5]/div[1]/pre/span/span'), 20));
 		var compile_button = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[1]/div/div[2]/div[1]/div'), 20));
@@ -198,9 +208,7 @@ function activate(context) {
 	});
 
 	let push_process = vscode.commands.registerCommand('ece408-remote-control.push', function () {
-		// read the file into the buffer
-		// var code = read_file();
-		// transfer the buffer onto the webpage
+		// transfer the local file onto the webpage
 		push_code_and_run();
 		// pull down the whole HTML source code and save in an HTML file (render it yourself)
 		// download_html(driver);

@@ -19,6 +19,16 @@ Before you can use the extension, there are some setting-up steps to follow.
 ```shell
 npm install
 ```
+
+### Install the shell dependencies
+
+If you're currently using Mac, use 
+```shell
+brew install pbcopy
+```
+
+If you're currently using Windows, make sure `clip.exe` is in your system PATH. You can open `Powershell` to check.
+
 ### Install the Chrome driver
 
 You also need to install `chromedriver` into your system `PATH`.
@@ -26,7 +36,7 @@ You also need to install `chromedriver` into your system `PATH`.
 -   You must download exactly the same version of `chromedriver` as your chrome browser if you want to use the `chromedriver` as your selenium driver. The chrome browser on your machine is likely to be updated automatically when a new version is released. In this case, please update to the newest version of `chromedriver` too.
 -   I strongly recommend you to install the `chromedriver` into the system software directory immediately, i.e. it should appear in `/usr/local/bin/chromedriver`.
 
-### Install the other extensions
+### Install the other extension
 
 In your VS Code workspace, please install the following extensions:
 
@@ -70,13 +80,23 @@ Then please type in `ctrl/cmd+shift+p`. and then `config`, or simple `f1`, and f
 
 This part is fully automated. Just type in `f2` and everything is set. After this step you will be on the code editing page.
 
-![login](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-020821.gif)
+![login](images/readme_about/login.gif)
 
 ### Pull
 
+This part is fully automated. Just type in `f3` and everything is set. After this step the code on the WebGPU page will be automatically added to your working file.
+
 ![pull](images/readme_about/pull.gif)
 
-## Push
+### Push
+
+This part is fully automated. Just type in `f5` and everything is set. After this step your code in your working file will be automatically pushed onto the WebGPU website, saved, and also submitted for feedbacks.
+
+![push](images/readme_about/push.gif)
+
+### Exit
+
+This part is to simply exit the Chrome browser and shut down the Internet connection to keep your account safe.
 
 ## Possible Improvements
 
