@@ -15,11 +15,12 @@ function activate(context) {
 	// This part of code will only be executed once when your extension is activated
 	var account; 
 	var passwd;
-	var num_lab = -1; // -1 for default
+	var num_lab = 999; // 999 for default
 	var machine = 'win'; // 'win' for default
-	// lookup table for the #lab-addr map
+
+	// lookup table for the num_lab-to-addr map
 	var addr_list = ['9999', '10001', '10002', '10003', '10010', '10004', '10005', '10011', '10124'];
-	var addr = addr_list[num_lab];
+	var addr;
 	var first_time_login = true;
 
 	// Initialization
@@ -30,7 +31,7 @@ function activate(context) {
 		.build();
 
 	// switch to full screen (only once)
-	driver.manage().window().maximize(); 
+	// driver.manage().window().maximize(); 
 
 	// ********** HELPER-FUNCTIONS ********** //
 
@@ -145,6 +146,9 @@ function activate(context) {
 			});
 	}
 
+
+	// ********** CALLER-FUNCTIONS ********** //
+
 	let config_process = vscode.commands.registerCommand('ece408-remote-control.config', function () {
 		vscode.window.showInputBox(
 			{
@@ -157,14 +161,14 @@ function activate(context) {
 				account = information_array[0]; 
 				passwd = information_array[1];
 				num_lab = parseInt(information_array[2]); // convert to integer
+				addr = addr_list[num_lab];
 				machine = information_array[3];
+				vscode.window.showInformationMessage("Please verify: ACCOUNT=" + account + ", PASSWD=" + passwd + ", LAB NUMBER=" +num_lab.toString() + ", MACHINE TYPE=" +machine + ".");
 		});
 	});
-	
-	// ********** CALLER-FUNCTIONS ********** //
 
 	let login_process = vscode.commands.registerCommand('ece408-remote-control.login', function () {
-		if (num_lab == -1) {
+		if (num_lab == 999) {
 			vscode.window.showInformationMessage("Please input your account and password first!");
 			return;
 		}
