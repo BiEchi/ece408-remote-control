@@ -7,9 +7,12 @@
   - [KEEP IT OPEN-SOURCE](#keep-it-open-source)
   - [Getting started](#getting-started)
     - [Create Your Working file](#create-your-working-file)
-    - [Install the NPM dependencies](#install-the-npm-dependencies)
+    - [Install ECE408 Remote Control Extension](#install-ece408-remote-control-extension)
     - [Install the shell dependencies](#install-the-shell-dependencies)
     - [Install the Chrome driver](#install-the-chrome-driver)
+      - [Before started](#before-started)
+      - [Check for the right version of Chrome](#check-for-the-right-version-of-chrome)
+      - [Download the correct version of chromedriver](#download-the-correct-version-of-chromedriver)
     - [Install the other extension](#install-the-other-extension)
     - [Network connection](#network-connection)
   - [Working steps](#working-steps)
@@ -55,23 +58,11 @@ code /path/to/your/workdir/lab1.cu
 Note that you **must** use `.cu` as the postfix of your working file, or the extension `vscode-cudacpp` will **not** be able to recognize the file as a valid CUDA C++ file.
 
 
-### Install the NPM dependencies
+### Install ECE408 Remote Control Extension
 
-```shell
-npm install
-```
+To set up the working environment, you need to install my extension first. After you install it, you can see the interface as shown below. Please click on the "security" and trust my extension button if it is not yet trusted.
 
-If you cannot simply use npm for installation, try to install them separately:
-```shell
-"chromedriver": "^93.0.1",
-"constants": "^0.0.2",
-"fs": "^0.0.1-security",
-"geckodriver": "^2.0.4",
-"http": "^0.0.1-security",
-"request": "^2.88.2",
-"request-promise": "^4.2.6",
-"selenium-webdriver": "^4.0.0-rc-2"
-```
+![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-055919.png)
 
 ### Install the shell dependencies
 
@@ -80,12 +71,40 @@ If you cannot simply use npm for installation, try to install them separately:
 brew install pbcopy
 ```
 
-`If` you're currently using Windows, make sure `clip.exe` is in your system PATH. You can open `Powershell` to check.
+`If` you're currently using Windows, `clip.exe` should already be in your system PATH. You can open `Powershell` and type in `ls | clip.exe` to check.
 
 ### Install the Chrome driver
 
 You also need to install `chromedriver` into your system `PATH`.
 
+#### Before started
+
+Before you install the chromedriver, you should have:
+![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-061739.png)
+
+Then you need to install the `chromedriver`. 
+
+#### Check for the right version of Chrome
+
+Please open the current Chrome (if you have) and check which version you're in. For example, mine is 94.0.4606.
+
+![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-062142.png)
+
+#### Download the correct version of chromedriver
+
+Go to [the download website](https://chromedriver.chromium.org/) to download the correct version of ChromeDriver. If you're using Windows, make sure you download the Windows version. I'm using Mac, so I'll download the Mac version.
+
+![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-062342.png)
+
+After downloading, please unzip the file and move it to your system PATH.
+
+![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-062504.png)
+
+Then please check whether you've successfully installed your chromedriver. If you see the feedback below, you're all set.
+
+![](http://jacklovespictures.oss-cn-beijing.aliyuncs.com/2021-10-10-062541.png)
+
+Notes:
 -   You must download exactly the same version of `chromedriver` as your chrome browser if you want to use the `chromedriver` as your selenium driver. The chrome browser on your machine is likely to be updated automatically when a new version is released. In this case, please update to the newest version of `chromedriver` too.
 -   I strongly recommend you to install the `chromedriver` into the system software directory immediately, i.e. it should appear in `/usr/local/bin/chromedriver`.
 

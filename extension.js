@@ -128,11 +128,12 @@ function activate(context) {
 		// copy the code onto the clipboard of your machine
 		vscode.window.showInformationMessage("Reminder: please save your code before you push!");
 		var exec = require('child_process').exec;
+		var spawn = require('child_process').spawn;
 		const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
 		if (machine == 'mac'){
 			exec(`cat ${currentlyOpenTabfilePath} | pbcopy`);
 		} else {
-			exec(`cat ${currentlyOpenTabfilePath} | clip.exe`);
+			spawn('cmd.exe', ['/c', `type ${currentlyOpenTabfilePath} | clip`]);
 		}
 		
 		// Move the cursor to the first line of code and click 
