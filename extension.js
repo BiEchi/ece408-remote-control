@@ -44,14 +44,46 @@ function activate(context) {
 	//=============================================================================
 
 	// This part of code will only be executed once when your extension is activated
-	var account; 
-	var passwd;
-	var num_lab = 999; // 999 for default
-	var machine = 'mac'; // 'mac' for default
+	var account = vscode.workspace.getConfiguration('ece408').get('account');
+	var passwd = vscode.workspace.getConfiguration('ece408').get('password');
+	var num_lab = vscode.workspace.getConfiguration('ece408').get('lab_num');
+	var machine = vscode.workspace.getConfiguration('ece408').get('machine')
 
-	// lookup table for the num_lab-to-addr map
 	var addr_list = ['9999', '10001', '10002', '10003', '10010', '10004', '10005', '10011', '10124'];
 	var addr;
+	switch (num_lab)
+	{
+		case '0':
+			addr = addr_list[0];
+			break;
+		case '1':
+			addr = addr_list[1];
+			break;
+		case '2':
+			addr = addr_list[2];
+			break;
+		case '3':
+			addr = addr_list[3];
+			break;
+		case '4':
+			addr = addr_list[4];
+			break;
+		case '5.1':
+			addr = addr_list[5];
+			break;
+		case '5.2':
+			addr = addr_list[6];
+			break;
+		case '6':
+			addr = addr_list[7];
+			break;
+		case '7':
+			addr = addr_list[8];
+			break;
+		default:
+			break;
+	}
+	
 	var first_time_login = true;
 
 	// Initialization
@@ -107,6 +139,7 @@ function activate(context) {
 				code_tab.click();
 			})
 		}
+		vscode.window.showInformationMessage("You're trying to access" + addr);
 		first_time_login = false;
 	}
 
@@ -115,13 +148,6 @@ function activate(context) {
 		const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
 		fs.truncateSync(currentlyOpenTabfilePath);
 		fs.appendFileSync(currentlyOpenTabfilePath, code);
-	}
-
-	function read_file(){
-		const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
-		const fs = require('fs');
-		const code = fs.readFileSync(currentlyOpenTabfilePath, 'utf8');
-		return code;
 	}
 
 	function push_code_and_run(){
@@ -198,26 +224,8 @@ function activate(context) {
 	//
 	//=============================================================================
 
-	let config_process = vscode.commands.registerCommand('ece408-remote-control.config', function () {
-		vscode.window.showInputBox(
-			{
-				password:false,
-				ignoreFocusOut:true, // when the cursor focuses on other places, the input box is still there
-				placeHolder:'<account> <password> <intended lab number> <machine type>', // notification
-				prompt:'Example: "lyon2 mypasswd 2 win". Note that for the machine type, only "win" or "mac" are allowed!',
-			}).then(function(information){
-				var information_array = information.split(" ");
-				account = information_array[0]; 
-				passwd = information_array[1];
-				num_lab = parseInt(information_array[2]); // convert to integer
-				addr = addr_list[num_lab];
-				machine = information_array[3];
-				vscode.window.showInformationMessage("Please verify: ACCOUNT=" + account + ", PASSWD=" + passwd + ", LAB NUMBER=" +num_lab.toString() + ", MACHINE TYPE=" +machine + ".");
-		});
-	});
-
 	let login_process = vscode.commands.registerCommand('ece408-remote-control.login', function () {
-		if (num_lab == 999) {
+		if (num_lab == 'null') {
 			vscode.window.showInformationMessage("Please input your account and password first!");
 			return;
 		}
@@ -258,7 +266,7 @@ function activate(context) {
 		vscode.window.showInformationMessage("You've successfully exit your account!");
 	});
 
-	for (let item in {config_process, login_process, pull_process, push_process, exit_process})
+	for (let item in {login_process, pull_process, push_process, exit_process})
 		context.subscriptions.push(item);
 }
 

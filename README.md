@@ -125,11 +125,10 @@ For students in China, make sure you’re equipped with a VPN so that you can ga
 
 | Shortcut | Canonical Press | Step | Frequency            |
 | -------- | --------------- | ---- | -------------------- |
-| `f1`     | `> config`      | 1    | often 1 time         |
-| `f2`     | `> login`       | 2    | often 1 time         |
-| `f3`     | `> pull`        | 3    | often 1 time         |
-| `f5`     | `> push`        | 4    | often multiple times |
-| `f12`    | `> exit`        | 5    | often 1 time         |
+| `f1`     | `> login`       | 1    | often 1 time         |
+| `f2`     | `> pull`        | 2    | often 1 time         |
+| `f5`     | `> push`        | 3    | often multiple times |
+| `f12`    | `> exit`        | 4    | often 1 time         |
 
 Note that the **Canonical Press** means you need to firstly press the combined keys `shift+ctrl/cmd+p` on your keyboard.
 
@@ -137,19 +136,19 @@ Note that the **Canonical Press** means you need to firstly press the combined k
 
 After creating the working file (`lab2.cu` in my case), please use VS Code to open it. Make sure you’ve done all things mentioned in the *Getting Started* part. 
 
-Then please type in `ctrl/cmd+shift+p`. and then `config`, or simple `f1`, and follow the hints in the box to enter your personal information.
+Then please open the `Settings` page in VS code. Detailedly, please go through `Code/Preferences/Settings/ECE408 Remote Control/`. Alternatively, you can just press `ctrl,` (win) or `command,` (mac).
 
 ![config](images/readme_about/config.gif)
 
 ### Login
 
-This part is fully automated. Just type in `f2` and everything is set. After this step you will be on the code editing page.
+This part is fully automated. Just type in `f1` and everything is set. After this step you will be on the code editing page.
 
 ![login](images/readme_about/login.gif)
 
 ### Pull
 
-This part is fully automated. Just type in `f3` and everything is set. After this step the code on the WebGPU page will be automatically added to your working file.
+This part is fully automated. Just type in `f2` and everything is set. After this step the code on the WebGPU page will be automatically added to your working file.
 
 ![pull](images/readme_about/pull.gif)
 

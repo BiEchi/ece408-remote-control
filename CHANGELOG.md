@@ -6,6 +6,24 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 
 
+## [1.1.0] - 2021-10-13
+
+### Added
+
+-   The `config` file to avoid typing in information every time.
+
+### Changed
+
+-   The README file about the `config` part.
+-   The route for MP 5.1 and MP 5.2.
+-   The shortcuts for `login` and `pull` commands due to delete of `config` command.
+
+### Removed
+
+-   The `config` command.
+
+
+
 ## [1.0.4] - 2021-10-10
 
 ### Added

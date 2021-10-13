@@ -2,7 +2,7 @@
   "name": "ece408-remote-control",
   "displayName": "ECE408 Remote Control",
   "description": "This extension is designed for ECE408 students to push the code to the remote website (webgpu.net) and automatically give a feed back through the built-in browser of vs code.",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -10,11 +10,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:ece408-remote-control.config",
-    "onCommand:ece408-remote-control.login",
-    "onCommand:ece408-remote-control.pull",
-    "onCommand:ece408-remote-control.push",
-    "onCommand:ece408-remote-control.exit"
+    "onCommand:ece408-remote-control.login"
   ],
   "main": "extension.js",
   "icon": "images/icon.png",
@@ -22,40 +18,63 @@
     "commands":
     [
       {
-        "command": "ece408-remote-control.config",
-        "title": "config"
-      },
-      {
         "command": "ece408-remote-control.login",
-        "title": "login"
+        "title": "WebGPU: Login"
       },
       {
         "command": "ece408-remote-control.pull",
-        "title": "pull"
+        "title": "WebGPU: Pull"
       },
       {
         "command": "ece408-remote-control.push",
-        "title": "push"
+        "title": "WebGPU: Push"
       },
       {
         "command": "ece408-remote-control.exit",
-        "title": "exit"
+        "title": "WebGPU: Exit"
       }
+    ],
+    "configuration": [
+        {
+            "title": "ECE408 Remote Control",
+            "properties":
+            {
+                "ece408.account":
+                {
+                    "type": "string",
+                    "default": "jackb2",
+                    "description": "The account you login into for your WebGPU."
+                },
+                "ece408.password":
+                {
+                    "type": "string",
+                    "default": "quotamn22",
+                    "description": "The password you login into for your WebGPU."
+                },
+                "ece408.machine":
+                {
+                    "type": "string",
+                    "default": "win",
+                    "description": "The machine you use to open this VS Code. Until now only win and mac are supported, so please input one of them (without quotation marks)."
+                },
+                "ece408.lab_num":
+                {
+                    "type": "string",
+                    "default": "null",
+                    "description": "The Lab Number you want to work on now. For labs 5.1 and 5.2 it's the same. For example, please type in '5.1' (without quotation marks)."
+                }
+            }
+        }
     ],
     "keybindings":
     [
         {
             "key": "f1",
-            "command": "ece408-remote-control.config",
-            "when": "editorTextFocus"
-        },
-        {
-            "key": "f2",
             "command": "ece408-remote-control.login",
             "when": "editorTextFocus"
         },
         {
-            "key": "f3",
+            "key": "f2",
             "command": "ece408-remote-control.pull",
             "when": "editorTextFocus"
         },
