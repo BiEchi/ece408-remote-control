@@ -139,7 +139,6 @@ function activate(context) {
 				code_tab.click();
 			})
 		}
-		vscode.window.showInformationMessage("You're trying to access" + addr);
 		first_time_login = false;
 	}
 
@@ -193,27 +192,41 @@ function activate(context) {
 			.click(all_button)
 			.perform();
 		}
-
 	}
 
+	function redirect_stderr(driver){
+		var err_box = driver.wait(until.elementLocated(By.xpath('/html/body/div[4]/p/pre'), 20));
+		var err_msg = err_box.get_attribute('innerHTML');
+		vscode.window.showInformationMessage("The error message is " + err_msg);
+	}
+
+	function redirect_stdout(currentUrl){
+		// work with the current url of browser
+		const rp = require('request-promise');
+		var html_source = rp(currentUrl);
+		html_source.then(function(html_source){
+			// save the file to ./feedback.html
+			const fs = require('fs');
+			const current_open_file_path = vscode.window.activeTextEditor.document.fileName;
+			const index = current_open_file_path.lastIndexOf("\/");  
+			const html_file_path = current_open_file_path.substring(0, index+1) + "/feedback.html";
+			vscode.window.showInformationMessage("The file path is " + html_file_path);
+			fs.truncateSync(html_file_path);
+			fs.appendFileSync(html_file_path, html_source);
+		});
+	}
+
+	// TODO: fix the asynchronization failure
 	function download_html(driver){
 		driver.getCurrentUrl() // nonsense, only for syntax
 			.then(function() {
 				return driver.getCurrentUrl();
 			})
 			.then(function(currentUrl) {
-				// work with the current url of browser
-				const rp = require('request-promise');
-				var html_source = rp(currentUrl);
-				html_source.then(function(html_source){
-					// save the file to ./feedback.html
-					const fs = require('fs');
-					const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
-					const index = currentlyOpenTabfilePath.lastIndexOf("\/");  
-					const currentlyOpenTabdirPath = currentlyOpenTabfilePath.substring(0, index+1) + "/feedback.html"
-					fs.truncateSync(currentlyOpenTabdirPath);
-					fs.appendFileSync(currentlyOpenTabdirPath, html_source);
-				});
+				if (currentUrl == 'https://www.webgpu.net/mp/' + addr)
+					redirect_stderr(driver);
+				else
+					redirect_stdout(currentUrl);
 			});
 	}
 

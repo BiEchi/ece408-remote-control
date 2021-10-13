@@ -123,12 +123,12 @@ For students in China, make sure you’re equipped with a VPN so that you can ga
 
 ## Working steps
 
-| Shortcut | Canonical Press | Step | Frequency            |
-| -------- | --------------- | ---- | -------------------- |
-| `f1`     | `> login`       | 1    | often 1 time         |
-| `f2`     | `> pull`        | 2    | often 1 time         |
-| `f5`     | `> push`        | 3    | often multiple times |
-| `f12`    | `> exit`        | 4    | often 1 time         |
+| Shortcut | Canonical Press   | Step | Frequency            |
+| -------- | ----------------- | ---- | -------------------- |
+| `f1`     | `> WebGPU: Login` | 1    | often 1 time         |
+| `f2`     | `> WebGPU: Pull`  | 2    | often 1 time         |
+| `f5`     | `> WebGPU: Push`  | 3    | often multiple times |
+| `f12`    | `> WebGPU: Exit`  | 4    | often 1 time         |
 
 Note that the **Canonical Press** means you need to firstly press the combined keys `shift+ctrl/cmd+p` on your keyboard.
 
