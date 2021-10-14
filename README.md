@@ -1,5 +1,5 @@
 # Your next WebGPU, is not WebGPU
-![build](https://img.shields.io/badge/build-passing-green) ![license](https://img.shields.io/badge/license-gpl-green) ![release](https://img.shields.io/badge/release-1.0.0--beta-green) 
+![build](https://img.shields.io/badge/build-passing-green) ![license](https://img.shields.io/badge/license-gpl-green) ![release](https://img.shields.io/badge/release-1.5.0--beta-green) 
 ![engine](https://img.shields.io/badge/engine-nodejs-yellow) ![machine type](https://img.shields.io/badge/machine-win--mac--linux-yellow)
 
 <img src='./images/readme_about/signature.png' width="100">
@@ -158,13 +158,12 @@ This part is fully automated. Just type in `f2` and everything is set. After thi
 
 This part is fully automated. Just type in `f5` and everything is set. After this step your code in your working file will be automatically pushed onto the WebGPU website, saved, and also submitted for feedbacks.
 
-![push](images/readme_about/push.gif)
+![push](images/readme_about/push.png)
 
 ### Exit
 
 This part is to simply exit the Chrome browser and shut down the Internet connection to keep your account safe.
 
-![push](images/readme_about/exit.gif)
 
 ## Trouble-shooting
 
