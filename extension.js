@@ -6,7 +6,7 @@
 //
 //   Jack BAI
 //
-//   Copyright (C) 2021 by Hepta Workshop
+//   Copyright (C) timeout_time21 by Hepta Workshop
 //
 //-----------------------------------------------------------------------------
 //
@@ -44,10 +44,11 @@ function activate(context) {
 	//=============================================================================
 
 	// This part of code will only be executed once when your extension is activated
+	const timeout_time = 7;
 	var account = vscode.workspace.getConfiguration('ece408').get('account');
 	var passwd = vscode.workspace.getConfiguration('ece408').get('password');
 	var num_lab = vscode.workspace.getConfiguration('ece408').get('lab_num');
-	var machine = vscode.workspace.getConfiguration('ece408').get('machine')
+	var machine = vscode.workspace.getConfiguration('ece408').get('machine');
 
 	var addr_list = ['9999', '10001', '10002', '10003', '10010', '10004', '10005', '10011', '10124'];
 	var addr;
@@ -106,27 +107,27 @@ function activate(context) {
 
 	function solve_potential_bad_ssl() {
 		// website error handling (temporary)
-		var advanced_button = driver.wait(until.elementLocated(By.xpath('//*[@id="details-button"]'), 20));
+		var advanced_button = driver.wait(until.elementLocated(By.xpath('//*[@id="details-button"]'), timeout_time));
 		advanced_button.click();
 	
-		var proceed_button = driver.wait(until.elementLocated(By.xpath('//*[@id="proceed-link"]'), 20));
+		var proceed_button = driver.wait(until.elementLocated(By.xpath('//*[@id="proceed-link"]'), timeout_time));
 		proceed_button.click();
 	}
 
 	function enter_information() {
-		var login_button = driver.wait(until.elementLocated(By.xpath('//*[@id="content"]/div/div/div/div[3]/a[2]/div'), 20));
+		var login_button = driver.wait(until.elementLocated(By.xpath('//*[@id="content"]/div/div/div/div[3]/a[2]/div'), timeout_time));
 		login_button.click();
 
-		var account_box = driver.wait(until.elementLocated(By.xpath('//*[@id="user_name"]'), 20));
+		var account_box = driver.wait(until.elementLocated(By.xpath('//*[@id="user_name"]'), timeout_time));
 		account_box.sendKeys(account);
 
-		var passwd_box = driver.wait(until.elementLocated(By.xpath('//*[@id="password"]'), 20));
+		var passwd_box = driver.wait(until.elementLocated(By.xpath('//*[@id="password"]'), timeout_time));
 		passwd_box.sendKeys(passwd);
 	}
 
 	function go_to_lab_page() {
 		driver.get('https://www.webgpu.net/mp/' + addr);
-		var code_tab = driver.wait(until.elementLocated(By.xpath('//*[@id="code-tab"]'), 20));
+		var code_tab = driver.wait(until.elementLocated(By.xpath('//*[@id="code-tab"]'), timeout_time));
 		code_tab.click()
 		.then(function(){
 			output_channel.appendLine("Successfully logged in and accesses Lab" + num_lab.toString() + ".");
@@ -151,51 +152,51 @@ function activate(context) {
 		}
 	}
 
-	function compile_has_finished(driver){
-		if (driver.findElement(By.xpath('/html/body/div[4]/h2')).isDisplayed()) // stderr, "compilation failer"
-			return true;
-		if (driver.findElement(By.xpath('/html/body/div[1]/div[3]/div[1]/div/h3')).isDisplayed()) // stdout, "Attempt Summary"
-			return true;
-		return false;
+	function redirect_stdout(){
+		output_channel.appendLine("### Timer Output ###");
+		var timer_output_block = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div[4]/div[2]'), timeout_time))
+		.then(function(){
+			var timer_output_text = timer_output_block.getText();
+			timer_output_text.then(function(){
+				output_channel.appendLine(timer_output_text);
+			});
+		})
+
+		output_channel.appendLine("### Logger Output ###");
+		var logger_output_block = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div[5]/div[2]'), timeout_time));
+		var logger_output_text = logger_output_block.getText();
+		output_channel.appendLine(logger_output_text);
 	}
 
 	function redirect_stderr(driver){
-		var err_box = driver.wait(until.elementLocated(By.xpath('/html/body/div[4]/p/pre'), 20));
-		var err_msg = err_box.get_attribute('innerHTML');
-		output_channel.appendLine("The error message is " + err_msg);
-	}
-
-	function redirect_stdout(currentUrl){
-		// work with the current url of browser
-		const rp = require('request-promise');
-		var html_source = rp(currentUrl);
-		html_source.then(function(html_source){
-			// save the file to ./feedback.html
-			const fs = require('fs');
-			const current_open_file_path = vscode.window.activeTextEditor.document.fileName;
-			const index = current_open_file_path.lastIndexOf("\/");  
-			const html_file_path = current_open_file_path.substring(0, index+1) + "/feedback.html";
-			output_channel.appendLine("The file path is " + html_file_path);
-			fs.truncateSync(html_file_path);
-			fs.appendFileSync(html_file_path, html_source);
-		});
+		output_channel.appendLine("### Error Message ###");
+		var error_name_block = driver.wait(until.elementLocated(By.xpath('/html/body/div[4]/h2'), timeout_time));
+		var error_name_text = error_name_block.getText();
+		output_channel.appendLine("Error:" + error_name_text);
+		var error_content_block = driver.wait(until.elementLocated(By.xpath('/html/body/div[4]/p'), timeout_time));
+		var error_content_text = error_content_block.getText();
+		output_channel.appendLine(error_content_text);
 	}
 
 	function feedback(){
-		output_channel.appendLine("Reminder: please save your .cu file before you run.");
 		output_channel.appendLine("Running your code...");
-		driver.wait(function() {
-			return compile_has_finished(driver);
-		}, 20)
-			.then(function() {
-				return driver.getCurrentUrl();
-			})
-			.then(function(currentUrl) {
-				if (currentUrl == 'https://www.webgpu.net/mp/' + addr)
-					redirect_stderr(driver);
-				else
-					redirect_stdout(currentUrl);
-			});
+
+		var stdout_symbol = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div[3]/div[1]/div/h3'), timeout_time));
+		var stderr_symbol = driver.wait(until.elementLocated(By.xpath('/html/body/div[4]/h2'), timeout_time));
+		
+		stdout_symbol.click()
+		.then(function(){
+			output_channel.appendLine("Compilation successful!");
+			redirect_stdout();
+			go_to_lab_page();
+		});
+
+		stderr_symbol.click()
+		.then(function(){
+			output_channel.appendLine("Compilation failed.");
+			redirect_stderr();
+			go_to_lab_page();
+		})
 	}
 
 
@@ -218,7 +219,7 @@ function activate(context) {
 		if (first_time_login == true)
 		{
 			enter_information();
-			var confirm_login_button = driver.wait(until.elementLocated(By.xpath('/html/body/div/div/div/form/div[3]/div/button'), 20));
+			var confirm_login_button = driver.wait(until.elementLocated(By.xpath('/html/body/div/div/div/form/div[3]/div/button'), timeout_time));
 			confirm_login_button.click()
 			.then(function(){
 				go_to_lab_page();
@@ -226,7 +227,7 @@ function activate(context) {
 		} else {
 			driver.wait(function() {
 				return driver.findElement(By.xpath('//*[@id="content"]/div/div')).isDisplayed();
-			}, 20)
+			}, timeout_time)
 			.then(function() {
 				go_to_lab_page();
 			})
@@ -237,16 +238,16 @@ function activate(context) {
 	let pull_process = vscode.commands.registerCommand('ece408-remote-control.pull', function () {
 		// get the code
 		output_channel.appendLine("Pulling the latest code on WebGPU from Lab " + num_lab.toString() + ".");
-		var code_editor = driver.wait(until.elementLocated(By.xpath('/html/body/pre'), 20));
+		var code_editor = driver.wait(until.elementLocated(By.xpath('/html/body/pre'), timeout_time));
 		driver.get('https://www.webgpu.net/mp/' + addr + '/program/')
 		.then(function(){
 			var code = code_editor.getText();
-			code.then(function(code) {
+			code.then(function() {
 				// save the raw data and overwrite the lab project
 				save_file(code);
 				// go through the login subroutine again
 				driver.get('https://www.webgpu.net/mp/' + addr);
-				var code_tab = driver.wait(until.elementLocated(By.xpath('//*[@id="code-tab"]'), 20));
+				var code_tab = driver.wait(until.elementLocated(By.xpath('//*[@id="code-tab"]'), timeout_time));
 				code_tab.click()
 				.then(function(){
 					output_channel.appendLine("Successfully pulled code in Lab " + num_lab.toString() + ".");
@@ -256,13 +257,14 @@ function activate(context) {
 	});
 
 	let push_process = vscode.commands.registerCommand('ece408-remote-control.push', function () {
+		output_channel.appendLine("Reminder: please save your .cu file before you run.");
 		// copy the content in the workspace to the clipboard
 		copy_to_clipboard();
 
 		// Move the cursor to the first line of code and click 
-		var code_line = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div/div[5]/div[1]/pre/span/span'), 20));
-		var compile_button = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[1]/div/div[2]/div[1]/div'), 20));
-		var all_button = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div/div/div[2]/div[1]/div[1]/div/div[2]/div[1]/ul/li[8]/a'), 20));
+		var code_line = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div/div[5]/div[1]/pre/span/span'), timeout_time));
+		var compile_button = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[1]/div/div[2]/div[1]/div'), timeout_time));
+		var all_button = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div/div/div[2]/div[1]/div[1]/div/div[2]/div[1]/ul/li[8]/a'), timeout_time));
 		const actions = driver.actions();
 
 		if (machine == 'mac'){
