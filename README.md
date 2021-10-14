@@ -138,6 +138,8 @@ After creating the working file (`lab2.cu` in my case), please use VS Code to op
 
 Then please open the `Settings` page in VS code. Detailedly, please go through `Code/Preferences/Settings/ECE408 Remote Control/`. Alternatively, you can just press `ctrl,` (win) or `command,` (mac).
 
+For the `headless` config, please choose `false` for now, because the headless mode is still under test.
+
 ![config](images/readme_about/config.gif)
 
 ### Login

@@ -11,7 +11,7 @@
   } while (0)
 
 //@@ Define any useful program-wide constants here
-#define TILE_WIDTH 999
+#define TILE_WIDTH 3
 #define MASK_WIDTH 3
 #define MASK_RADIUS 1
 #define BLOCK_WIDTH 3+(3-1) // TILE_WIDTH+(MASK_WIDTH-1)

@@ -6,6 +6,21 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 
 
+## [1.5.0] - 2021-10.14
+
+### Added
+
+-   Detailed process feedback on the OUTPUT channel.
+-   Synchronization on `promise` objects.
+-   The option to choose to be `headless` or not. (not stable).
+-   The browser open/close automation.
+
+### Changed
+
+-   Resolved potential issues due to asynchronization.
+
+
+
 ## [1.2.0] - 2021-10-14
 
 ### Added
@@ -14,7 +29,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
--   The `vscode.window.showInformation()` method to `outputChannel()` method.
+-   The `vscode.window.showInformation()` method to `startOutputChannel()` method.
 
 
 

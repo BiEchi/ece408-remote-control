@@ -90,7 +90,8 @@ function activate(context) {
 	var first_time_login = true;
 	var output_channel = vscode.window.createOutputChannel("WebGPU");
 	output_channel.show();
-	output_channel.appendLine("If any sub-process (with [num%] on the left) exceeds 10 seconds, please click the button again.")
+	output_channel.appendLine("If any sub-process (with [num%] on the left) exceeds 10 seconds, please launch the command again.");
+	output_channel.appendLine("Because the headless mode is still under testing, please don't flag the 'headless' config for now.");
 
 	// Initialization
 	const {By, Key, until} = require('selenium-webdriver');
@@ -104,6 +105,9 @@ function activate(context) {
 		.forBrowser('chrome')
 		.withCapabilities(options)
 		.build();
+
+
+	driver.manage().window().minimize();
 
 	//=============================================================================
 	//
@@ -220,7 +224,9 @@ function activate(context) {
 		.then(function(){
 			output_channel.appendLine("[PUSH/79%] Compilation failed. Redirecting to LOGIN...");
 			redirect_stderr();
-		})
+		});
+
+		driver.manage().window().minimize();
 	}
 
 
@@ -290,6 +296,9 @@ function activate(context) {
 		var all_button = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div/div/div[2]/div[1]/div[1]/div/div[2]/div[1]/ul/li[8]/a'), timeout_time));
 		const actions = driver.actions();
 
+
+		driver.manage().window().maximize();
+
 		if (machine == 'mac'){
 			actions
 			.click(code_line)
@@ -325,7 +334,7 @@ function activate(context) {
 
 	let exit_process = vscode.commands.registerCommand('ece408-remote-control.exit', function () {
 		driver.quit();
-		output_channel.appendLine("You've successfully exit your account!");
+		output_channel.appendLine("You've successfully exited your account!");
 	});
 
 	for (let item in {login_process, pull_process, push_process, exit_process})
