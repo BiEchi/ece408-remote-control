@@ -84,7 +84,10 @@ function activate(context) {
 			break;
 	}
 	
+	// flag to determine whether this is the first time for logging in
 	var first_time_login = true;
+	var output_channel = vscode.window.createOutputChannel("WebGPU");
+	output_channel.show();
 
 	// Initialization
 	const {By, Key, until} = require('selenium-webdriver');
@@ -101,7 +104,7 @@ function activate(context) {
 	//
 	//=============================================================================
 
-	function bad_ssl(driver) {
+	function solve_potential_bad_ssl() {
 		// website error handling (temporary)
 		var advanced_button = driver.wait(until.elementLocated(By.xpath('//*[@id="details-button"]'), 20));
 		advanced_button.click();
@@ -110,36 +113,24 @@ function activate(context) {
 		proceed_button.click();
 	}
 
-	function login(driver) {
-		if (first_time_login == true)
-		{
-			var login_button = driver.wait(until.elementLocated(By.xpath('//*[@id="content"]/div/div/div/div[3]/a[2]/div'), 20));
-			login_button.click();
-	
-			var account_box = driver.wait(until.elementLocated(By.xpath('//*[@id="user_name"]'), 20));
-			account_box.sendKeys(account);
-			var passwd_box = driver.wait(until.elementLocated(By.xpath('//*[@id="password"]'), 20));
-			passwd_box.sendKeys(passwd);
-	
-			var confirm_login_button = driver.wait(until.elementLocated(By.xpath('/html/body/div/div/div/form/div[3]/div/button'), 20));
-			confirm_login_button.click()
-			.then(function(){
-				driver.get('https://www.webgpu.net/mp/' + addr);
-				var code_tab = driver.wait(until.elementLocated(By.xpath('//*[@id="code-tab"]'), 20));
-				code_tab.click();
-			})
-		} else {
-			driver.wait(function() {
-				return driver.findElement(By.xpath('//*[@id="content"]/div/div')).isDisplayed();
-			}, 20)
-			.then(function() {
-				// Go to the number of lab you want
-				driver.get('https://www.webgpu.net/mp/' + addr);
-				var code_tab = driver.wait(until.elementLocated(By.xpath('//*[@id="code-tab"]'), 20));
-				code_tab.click();
-			})
-		}
-		first_time_login = false;
+	function enter_information() {
+		var login_button = driver.wait(until.elementLocated(By.xpath('//*[@id="content"]/div/div/div/div[3]/a[2]/div'), 20));
+		login_button.click();
+
+		var account_box = driver.wait(until.elementLocated(By.xpath('//*[@id="user_name"]'), 20));
+		account_box.sendKeys(account);
+
+		var passwd_box = driver.wait(until.elementLocated(By.xpath('//*[@id="password"]'), 20));
+		passwd_box.sendKeys(passwd);
+	}
+
+	function go_to_lab_page() {
+		driver.get('https://www.webgpu.net/mp/' + addr);
+		var code_tab = driver.wait(until.elementLocated(By.xpath('//*[@id="code-tab"]'), 20));
+		code_tab.click()
+		.then(function(){
+			output_channel.appendLine("Successfully logged in and accesses Lab" + num_lab.toString() + ".");
+		})
 	}
 
 	function save_file(code){
@@ -149,9 +140,7 @@ function activate(context) {
 		fs.appendFileSync(currentlyOpenTabfilePath, code);
 	}
 
-	function push_code_and_run(){
-		// copy the code onto the clipboard of your machine
-		vscode.window.showInformationMessage("Reminder: please save your code before you push!");
+	function copy_to_clipboard(){
 		var exec = require('child_process').exec;
 		var spawn = require('child_process').spawn;
 		const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
@@ -160,44 +149,20 @@ function activate(context) {
 		} else {
 			spawn('cmd.exe', ['/c', `type ${currentlyOpenTabfilePath} | clip`]);
 		}
-		
-		// Move the cursor to the first line of code and click 
-		var code_line = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div/div[5]/div[1]/pre/span/span'), 20));
-		var compile_button = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[1]/div/div[2]/div[1]/div'), 20));
-		var all_button = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div/div/div[2]/div[1]/div[1]/div/div[2]/div[1]/ul/li[8]/a'), 20));
-		const actions = driver.actions();
+	}
 
-		if (machine == 'mac'){
-			actions
-			.click(code_line)
-			.keyDown(Key.COMMAND)
-			.sendKeys('a')
-			.sendKeys('v')
-			.sendKeys('s')
-			.keyUp(Key.COMMAND)
-			// .sendKeys(code) // we use the approach to copy the code yourself instead
-			.click(compile_button)
-			.click(all_button)
-			.perform();
-		} else {
-			actions
-			.click(code_line)
-			.keyDown(Key.CONTROL)
-			.sendKeys('a')
-			.sendKeys('v')
-			.sendKeys('s')
-			.keyUp(Key.CONTROL)
-			// .sendKeys(code) // we use the approach to copy the code yourself instead
-			.click(compile_button)
-			.click(all_button)
-			.perform();
-		}
+	function compile_has_finished(driver){
+		if (driver.findElement(By.xpath('/html/body/div[4]/h2')).isDisplayed()) // stderr, "compilation failer"
+			return true;
+		if (driver.findElement(By.xpath('/html/body/div[1]/div[3]/div[1]/div/h3')).isDisplayed()) // stdout, "Attempt Summary"
+			return true;
+		return false;
 	}
 
 	function redirect_stderr(driver){
 		var err_box = driver.wait(until.elementLocated(By.xpath('/html/body/div[4]/p/pre'), 20));
 		var err_msg = err_box.get_attribute('innerHTML');
-		vscode.window.showInformationMessage("The error message is " + err_msg);
+		output_channel.appendLine("The error message is " + err_msg);
 	}
 
 	function redirect_stdout(currentUrl){
@@ -210,15 +175,18 @@ function activate(context) {
 			const current_open_file_path = vscode.window.activeTextEditor.document.fileName;
 			const index = current_open_file_path.lastIndexOf("\/");  
 			const html_file_path = current_open_file_path.substring(0, index+1) + "/feedback.html";
-			vscode.window.showInformationMessage("The file path is " + html_file_path);
+			output_channel.appendLine("The file path is " + html_file_path);
 			fs.truncateSync(html_file_path);
 			fs.appendFileSync(html_file_path, html_source);
 		});
 	}
 
-	// TODO: fix the asynchronization failure
-	function download_html(driver){
-		driver.getCurrentUrl() // nonsense, only for syntax
+	function feedback(){
+		output_channel.appendLine("Reminder: please save your .cu file before you run.");
+		output_channel.appendLine("Running your code...");
+		driver.wait(function() {
+			return compile_has_finished(driver);
+		}, 20)
 			.then(function() {
 				return driver.getCurrentUrl();
 			})
@@ -239,19 +207,36 @@ function activate(context) {
 
 	let login_process = vscode.commands.registerCommand('ece408-remote-control.login', function () {
 		if (num_lab == 'null') {
-			vscode.window.showInformationMessage("Please input your account and password first!");
+			output_channel.appendLine("Error: please input your account and password first!");
 			return;
 		}
 
 		// Certify the website
+		output_channel.appendLine("Logging into your WebGPU account and accessing Lab" + num_lab.toString() + "...");
 		driver.get('https://www.webgpu.net/');
-		bad_ssl(driver);
-		login(driver);
-		vscode.window.showInformationMessage("Successfully logged in to your WebGPU account and accessing Lab" + num_lab.toString() + ".");
+		solve_potential_bad_ssl();
+		if (first_time_login == true)
+		{
+			enter_information();
+			var confirm_login_button = driver.wait(until.elementLocated(By.xpath('/html/body/div/div/div/form/div[3]/div/button'), 20));
+			confirm_login_button.click()
+			.then(function(){
+				go_to_lab_page();
+			})
+		} else {
+			driver.wait(function() {
+				return driver.findElement(By.xpath('//*[@id="content"]/div/div')).isDisplayed();
+			}, 20)
+			.then(function() {
+				go_to_lab_page();
+			})
+		}
+		first_time_login = false;
 	});
 
 	let pull_process = vscode.commands.registerCommand('ece408-remote-control.pull', function () {
 		// get the code
+		output_channel.appendLine("Pulling the latest code on WebGPU from Lab " + num_lab.toString() + ".");
 		var code_editor = driver.wait(until.elementLocated(By.xpath('/html/body/pre'), 20));
 		driver.get('https://www.webgpu.net/mp/' + addr + '/program/')
 		.then(function(){
@@ -262,21 +247,60 @@ function activate(context) {
 				// go through the login subroutine again
 				driver.get('https://www.webgpu.net/mp/' + addr);
 				var code_tab = driver.wait(until.elementLocated(By.xpath('//*[@id="code-tab"]'), 20));
-				code_tab.click();
+				code_tab.click()
+				.then(function(){
+					output_channel.appendLine("Successfully pulled code in Lab " + num_lab.toString() + ".");
+				})
 			})
 		})
 	});
 
 	let push_process = vscode.commands.registerCommand('ece408-remote-control.push', function () {
-		// transfer the local file onto the webpage
-		push_code_and_run();
-		// pull down the whole HTML source code and save in an HTML file (render it yourself)
-		// download_html(driver);
+		// copy the content in the workspace to the clipboard
+		copy_to_clipboard();
+
+		// Move the cursor to the first line of code and click 
+		var code_line = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[2]/div/span/div/div[6]/div[1]/div/div/div/div[5]/div[1]/pre/span/span'), 20));
+		var compile_button = driver.wait(until.elementLocated(By.xpath('//*[@id="code"]/div[1]/div[1]/div/div[2]/div[1]/div'), 20));
+		var all_button = driver.wait(until.elementLocated(By.xpath('/html/body/div[1]/div/div/div[2]/div[1]/div[1]/div/div[2]/div[1]/ul/li[8]/a'), 20));
+		const actions = driver.actions();
+
+		if (machine == 'mac'){
+			actions
+			.click(code_line)
+			.keyDown(Key.COMMAND)
+			.sendKeys('a')
+			.sendKeys('v')
+			.sendKeys('s')
+			.keyUp(Key.COMMAND)
+			.click(compile_button)
+			.click(all_button)
+			.perform()
+			.then(function(){
+				// download feedback
+				feedback();
+			});
+		} else {
+			actions
+			.click(code_line)
+			.keyDown(Key.CONTROL)
+			.sendKeys('a')
+			.sendKeys('v')
+			.sendKeys('s')
+			.keyUp(Key.CONTROL)
+			.click(compile_button)
+			.click(all_button)
+			.perform()
+			.then(function(){
+				// download feedback
+				feedback();
+			})
+		}
 	});
 
 	let exit_process = vscode.commands.registerCommand('ece408-remote-control.exit', function () {
 		driver.quit();
-		vscode.window.showInformationMessage("You've successfully exit your account!");
+		output_channel.appendLine("You've successfully exit your account!");
 	});
 
 	for (let item in {login_process, pull_process, push_process, exit_process})
