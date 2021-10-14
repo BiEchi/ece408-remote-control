@@ -203,7 +203,8 @@ function activate(context) {
 				return error_content_block.getText();
 			}).then(function(error_content_text){
 				output_channel.appendLine(error_content_text);
-				driver.navitage().refresh();
+				var cancel_button = driver.wait(until.elementLocated(By.xpath('/html/body/div[4]/div[7]/button'), timeout_time));
+				cancel_button.click();
 			})
 		})
 	}
