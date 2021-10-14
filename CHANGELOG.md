@@ -6,6 +6,18 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 
 
+## [1.2.0] - 2021-10-14
+
+### Added
+
+-   A more strict method for detecting whether already accessed the proposed website.
+
+### Changed
+
+-   The `vscode.window.showInformation()` method to `outputChannel()` method.
+
+
+
 ## [1.1.0] - 2021-10-13
 
 ### Added
