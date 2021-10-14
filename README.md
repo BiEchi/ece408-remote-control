@@ -1,4 +1,4 @@
-# Your next WebGPU, is not WebGPU
+# VSC-GPU: A Selenium-based VS Code Extension For Local Edit and Cloud Compilation on WebGPU
 ![build](https://img.shields.io/badge/build-passing-green) ![license](https://img.shields.io/badge/license-gpl-green) ![release](https://img.shields.io/badge/release-1.5.0--beta-green) 
 ![engine](https://img.shields.io/badge/engine-nodejs-yellow) ![machine type](https://img.shields.io/badge/machine-win--mac--linux-yellow)
 

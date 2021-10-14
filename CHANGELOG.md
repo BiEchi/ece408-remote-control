@@ -6,6 +6,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 
 
+## [1.5.2] - 2021-10.14
+
+### Changed
+
+-   The name from `ECE408 Remote Control` to `VSC-GPU`.
+
+
+
 ## [1.5.0] - 2021-10.14
 
 ### Added
