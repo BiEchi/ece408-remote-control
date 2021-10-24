@@ -246,7 +246,7 @@ function activate(context) {
 		// Certify the website
 		output_channel.appendLine("[LOGIN/7%] Logging into your WebGPU account and accessing Lab" + num_lab.toString() + "...");
 		driver.get('https://www.webgpu.net/');
-		solve_potential_bad_ssl();
+		// solve_potential_bad_ssl();
 		if (first_time_login == true)
 		{
 			enter_information();

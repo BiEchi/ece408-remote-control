@@ -6,6 +6,18 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 
 
+## [1.6.0] - 2021-10.24
+
+### Removed
+
+-   Becaise SSL is back to life on the server, we delete the corresponding solver code.
+
+### Changed
+
+-   Due to ambiguity, we change the name to **VSC-WebGPU** from VSC-GPU.
+
+
+
 ## [1.5.2] - 2021-10.14
 
 ### Changed
