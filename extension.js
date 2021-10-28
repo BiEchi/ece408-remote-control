@@ -50,7 +50,7 @@ function activate(context) {
 	var num_lab = vscode.workspace.getConfiguration('ece408').get('lab_num');
 	var machine = vscode.workspace.getConfiguration('ece408').get('machine');
 	var headless_flag = vscode.workspace.getConfiguration('ece408').get('headless');
-
+	
 	var addr_list = ['9999', '10001', '10002', '10003', '10010', '10004', '10005', '10011', '10124'];
 	var addr;
 	switch (num_lab)
@@ -81,6 +81,41 @@ function activate(context) {
 			break;
 		case '7':
 			addr = addr_list[8];
+			break;
+		default:
+			break;
+	}
+
+	var MP_xpath_list = ['4', '5', '6', '7', '8', '9', '10', '11', '12'];
+	var MP_xpath;
+	switch (num_lab)
+	{
+		case '0':
+			MP_xpath = MP_xpath_list[0];
+			break;
+		case '1':
+			MP_xpath = MP_xpath_list[1];
+			break;
+		case '2':
+			MP_xpath = MP_xpath_list[2];
+			break;
+		case '3':
+			MP_xpath = MP_xpath_list[3];
+			break;
+		case '4':
+			MP_xpath = MP_xpath_list[4];
+			break;
+		case '5.1':
+			MP_xpath = MP_xpath_list[5];
+			break;
+		case '5.2':
+			MP_xpath = MP_xpath_list[6];
+			break;
+		case '6':
+			MP_xpath = MP_xpath_list[7];
+			break;
+		case '7':
+			MP_xpath = MP_xpath_list[8];
 			break;
 		default:
 			break;
@@ -145,11 +180,18 @@ function activate(context) {
 	}
 
 	function go_to_lab_page() {
-		driver.get('https://www.webgpu.net/mp/' + addr);
-		var code_tab = driver.wait(until.elementLocated(By.xpath('//*[@id="code-tab"]'), timeout_time));
-		code_tab.click()
+		driver.get('https://www.webgpu.net')
 		.then(function(){
 			output_channel.appendLine("[LOGIN/100%] Successfully logged in and have accessed Lab" + num_lab.toString() + ".");
+			// we use the approach to click on the tabs to load the code
+			var more_tab = driver.wait(until.elementLocated(By.xpath('/html/body/nav/div/div/button'), timeout_time));
+			more_tab.click()
+			var dropdown_toggle = driver.wait(until.elementLocated(By.xpath('/html/body/nav/div/nav/ul[1]/li[1]/a'), timeout_time));
+			dropdown_toggle.click();
+			var mp_button = driver.wait(until.elementLocated(By.xpath('/html/body/nav/div/nav/ul[1]/li[1]/ul/li[' + MP_xpath + ']/a'), timeout_time));
+			mp_button.click();
+			var code_tab = driver.wait(until.elementLocated(By.xpath('//*[@id="code-tab"]'), timeout_time));
+			code_tab.click()
 		})
 	}
 
@@ -246,7 +288,7 @@ function activate(context) {
 		// Certify the website
 		output_channel.appendLine("[LOGIN/7%] Logging into your WebGPU account and accessing Lab" + num_lab.toString() + "...");
 		driver.get('https://www.webgpu.net/');
-		// solve_potential_bad_ssl();
+		solve_potential_bad_ssl();
 		if (first_time_login == true)
 		{
 			enter_information();
@@ -271,18 +313,45 @@ function activate(context) {
 	let pull_process = vscode.commands.registerCommand('ece408-remote-control.pull', function () {
 		// get the code
 		output_channel.appendLine("[PULL/22%] Pulling the latest code on WebGPU from Lab " + num_lab.toString() + ".");
-		var code_editor = driver.wait(until.elementLocated(By.xpath('/html/body/pre'), timeout_time));
+		var code_editor;
+		var code = "";
 		driver.get('https://www.webgpu.net/mp/' + addr + '/program/')
 		.then(function(){
-			output_channel.appendLine("[PULL/59%] Redirecting to the source code page.");
-			var code = code_editor.getText();
-			code.then(function(code) {
-				// save the raw data and overwrite the lab project
-				save_file(code);
-				output_channel.appendLine("[PULL/88%] Successfully saved the file. Redirecting to LOGIN...");
-				// go through the login subroutine again
-				go_to_lab_page();
-			})
+			// potential SSL error here
+			return driver.getCurrentUrl();
+		}).then(function(currentUrl){
+			if (currentUrl.toString() == 'https://www.webgpu.net/mp/' + addr + '/program/') {
+				solve_potential_bad_ssl();
+				enter_information();
+				var confirm_login_button = driver.wait(until.elementLocated(By.xpath('/html/body/div/div/div/form/div[3]/div/button'), timeout_time));
+				confirm_login_button.click()
+				.then(function(){
+					driver.get('https://www.webgpu.net/mp/' + addr + '/program/')
+					.then(function(){
+						output_channel.appendLine("[PULL/59%] Redirecting to the source code page.");
+						code_editor = driver.wait(until.elementLocated(By.xpath('/html/body/pre'), timeout_time))
+						code = code_editor.getText();
+						code.then(function(code) {
+							// save the raw data and overwrite the lab project
+							save_file(code);
+							output_channel.appendLine("[PULL/88%] Successfully saved the file. Redirecting to LOGIN...");
+							// go through the login subroutine again
+							go_to_lab_page();
+						})
+					})
+				})
+			} else {
+				output_channel.appendLine("[PULL/59%] Redirecting to the source code page.");
+				code_editor = driver.wait(until.elementLocated(By.xpath('/html/body/pre'), timeout_time));
+				code = code_editor.getText();
+				code.then(function(code) {
+					// save the raw data and overwrite the lab project
+					save_file(code);
+					output_channel.appendLine("[PULL/88%] Successfully saved the file. Redirecting to LOGIN...");
+					// go through the login subroutine again
+					go_to_lab_page();
+				})
+			}
 		})
 	});
 
