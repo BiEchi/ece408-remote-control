@@ -6,6 +6,30 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 
 
+## [1.8.5] - 2022.1.30
+
+### Changed
+
+-   Changed icon.
+
+
+
+## [1.8.2] - 2022.1.29
+
+### Changed
+
+-   Changed displayed name and icon.
+
+
+
+## [1.8.2] - 2021.10.28
+
+### Added
+
+-   Added the system to avoid ssl failure interruption when executing the `pull` operation.
+
+
+
 ## [1.6.0] - 2021-10.24
 
 ### Removed
