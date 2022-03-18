@@ -1,5 +1,5 @@
 # VSC-GPU: A Selenium-based VS Code Extension For Local Edit and Cloud Compilation on WebGPU
-![build](https://img.shields.io/badge/build-passing-green) ![license](https://img.shields.io/badge/license-gpl-green) ![release](https://img.shields.io/badge/release-1.5.0--beta-green) 
+![build](https://img.shields.io/badge/build-passing-green) ![license](https://img.shields.io/badge/license-gpl-green) ![release](https://img.shields.io/badge/release-1.8.5--beta-green) 
 ![engine](https://img.shields.io/badge/engine-nodejs-yellow) ![machine type](https://img.shields.io/badge/machine-win--mac--linux-yellow)
 
 <img src='./images/readme_about/signature.png' width="100">
@@ -31,6 +31,31 @@
       * [Renew the Extension Version](#renew-the-extension-version)
    * [Acknowledgements](#acknowledgements)
    * [Release Notes](#release-notes)
+
+## Understanding the Architecture
+
+If you’re interested in this project and want to contribute to it, please take a look at my paper first. The paper was submitted to ICFTIC 2022 and you must cite this paper and the original paper of WebGPU if you want to build upon the VCS-WebGPU system.
+
+```txt
+@inproceedings{bai2021vsc,
+  title={VSC-WebGPU: A Selenium-based VS Code Extension For Local Edit And Cloud Compilation on WebGPU},
+  author={Bai, Hao},
+  booktitle={2021 IEEE 3rd International Conference on Frontiers Technology of Information and Computer (ICFTIC)},
+  pages={474--477},
+  year={2021},
+  organization={IEEE}
+}
+@inproceedings{dakkak2016webgpu,
+  title={Webgpu: A scalable online development platform for gpu programming courses},
+  author={Dakkak, Abdul and Pearson, Carl and Hwu, Wen-mei},
+  booktitle={2016 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW)},
+  pages={942--949},
+  year={2016},
+  organization={IEEE}
+}
+```
+
+There are 2 versions of paper. To get a quick review, please refer to the published paper at https://ieeexplore.ieee.org/abstract/document/9647189. To get a detailed insight (full version), turn to [my blog](https://jackgetup.com) to get access to it. This variance is due to the fact that conference inprocedings require the page limit to be 4 so only a very limited amount of work was shown to global people.
 
 ## Introduction
 
